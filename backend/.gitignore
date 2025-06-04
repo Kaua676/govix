@@ -1,0 +1,75 @@
+# --- Ambiente Virtual do Projeto ('env/') ---
+# Cada membro da equipe deve criar e gerenciar seu próprio ambiente virtual localmente.
+# Por isso, a pasta 'env/' (nosso ambiente virtual) não é versionada.
+env/
+
+# --- Bytecode e Arquivos Compilados do Python ---
+# Estes são arquivos gerados automaticamente pelo interpretador Python (__pycache__, *.pyc, etc.).
+# Não precisam ser versionados, pois são recriados durante a execução.
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Configurações de IDEs e Editores ---
+# Para manter nosso repositório limpo de configurações pessoais de IDEs/editores.
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# --- ARQUIVOS DE AMBIENTE E SEGREDOS ---
+
+.env
+.env.*
+# O arquivo '.env.example' DEVE ser versionado. Ele serve como um modelo
+# para que cada membro da equipe crie seu próprio arquivo .env local.
+!/.env.example
+
+# --- Bancos de Dados Locais (para Desenvolvimento/Testes) ---
+# Nosso banco de dados principal é o MongoDB.
+# Se alguém precisar usar um banco de dados local temporário (ex: SQLite) para testes específicos,
+# esses arquivos devem ser ignorados aqui.
+# *.sqlite3
+# *.db
+
+# --- Logs da Aplicação ---
+# Logs gerados pela nossa aplicação Python durante a execução.
+# Logs do servidor MongoDB são gerenciados separadamente pela instância do MongoDB.
+*.log
+logs/
+*.out
+
+# --- Relatórios de Testes e Cobertura de Código ---
+# Arquivos e relatórios gerados pelas nossas ferramentas de teste (pytest, coverage, etc.).
+# São úteis localmente, mas não precisam ser versionados.
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+nosetests.xml
+pytestdebug.log
+
+# --- Distribuição / Pacotes Gerados ---
+# Arquivos e pastas gerados ao construir pacotes ou distribuições do Python (dist/, build/, etc.).
+# São artefatos de build, não código fonte.
+dist/
+build/
+*.egg-info/
+*.egg
+*.whl
+MANIFEST
+
+# --- Arquivos Específicos do Sistema Operacional ---
+# Para evitar arquivos desnecessários gerados por diferentes SOs no repositório (ex: .DS_Store, Thumbs.db).
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- Outros Arquivos Específicos do Projeto (a serem discutidos pela equipe) ---
+# Se identificarmos outros arquivos ou pastas gerados localmente que não devem
+# ser versionados, adicionaremos aqui.
