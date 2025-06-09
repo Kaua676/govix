@@ -1,7 +1,7 @@
 # --- Ambiente Virtual do Projeto ('env/') ---
 # Cada membro da equipe deve criar e gerenciar seu próprio ambiente virtual localmente.
 # Por isso, a pasta 'env/' (nosso ambiente virtual) não é versionada.
-env/
+venv/
 
 # --- Bytecode e Arquivos Compilados do Python ---
 # Estes são arquivos gerados automaticamente pelo interpretador Python (__pycache__, *.pyc, etc.).
