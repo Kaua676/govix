@@ -41,6 +41,8 @@ def load_dataframe():
             .str.replace(",", ".", regex=False)
             .astype(float)
         )
+        df["Programa Orçamentário"] = df["Programa Orçamentário"].str.capitalize()
+        df["Programa Orçamentário"] = df["Programa Orçamentário"].replace("Atenção básica em saúde", "Atencao basica em saude")
 
         return df
 

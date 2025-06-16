@@ -36,6 +36,9 @@ def filtrar_dados():
     if funcoes := params.get("funcao"):
         filtros.append(df["Função"].isin(funcoes))
 
+    if programa := params.get("programa"):
+        filtros.append(df["Programa Orçamentário"].isin(programa))
+
     if favorecido := params.get("favorecido"):
         filtros.append(df["Tipo de Favorecido"].isin(favorecido))
     
@@ -43,9 +46,12 @@ def filtrar_dados():
 
     ascending = json.loads(params.get("ascending").lower()) if params.get("ascending") else False
 
-    group = ["Ano", "UF", "Função"]
-    if params.get("group") and not json.loads(params.get("group").lower()):
-        group.append("Tipo de Favorecido")
+    group = ["Ano", "UF", "Função", "Tipo"]
+    if group_by := params.get("group"):
+        for g in group_by:
+            group.append(g)
+    
+    print(group)
 
 
     # Combina os filtros com AND
