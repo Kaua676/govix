@@ -82,9 +82,14 @@ Para utilizar os filtros deve seguir essa estrutura de filtros:
 ['Constitucionais e Royalties', 'Legais, Voluntárias e Específicas']
 ```
 
-##### Tipo de favorecido
+##### Favorecido
 ```
 ['Administração Pública', 'Administração Pública Estadual ou do Distrito Federal', 'Administração Pública Federal', 'Administração Pública Municipal', 'Agentes Intermediários', 'Entidades Empresariais Privadas', 'Entidades Sem Fins Lucrativos', 'Fundo Público', 'Organizações Internacionais', 'Sem Informação']
+```
+
+##### Programa
+```
+Verificar ao fazer a consulta com o filtro de função pois existem diversos e são mutáveis.
 ```
 
 ##### Order By:
