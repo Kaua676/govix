@@ -40,4 +40,61 @@ Todos os códigos-fonte do projeto são versionados e armazenados em nossos repo
 
   * **Link do Repositório Principal do GitHub:** [https://github.com/Kaua676/govix](https://github.com/Kaua676/govix)
 
+### Funções
+
+Para utilizar os filtros deve seguir essa estrutura de filtros:
+
+```json
+{
+    "data_inicio": "YYYY-MM",
+    "data_fim": "YYYY-MM",
+    "uf": ["str"],
+    "funcao": ["str"],
+    "tipo": ["str"],
+    "favorecido": ["str"],
+    "order_by": "str",
+    "ascending": bool,
+    "group": bool
+}
+```
+
+#### Valores possíveis para os parâmetros de filtro:
+
+##### Data Início e Data Fim:
+```
+"YYYY-MM" (ex: "2022-01")
+```
+
+##### UF:
+```
+"str" (ex: "SP")
+```
+
+#### Função
+
+```
+['Administração', 'Agricultura', 'Assistência social', 'Ciência e Tecnologia', 'Comunicações', 'Comércio e serviços', 'Cultura', 'Defesa nacional', 'Desporto e lazer', 'Direitos da cidadania', 'Educação', 'Encargos especiais', 'Energia', 'Gestão ambiental', 'Habitação', 'Indústria', 'Múltiplo', 'Organização agrária', 'Relações exteriores', 'Saneamento', 'Saúde', 'Segurança pública', 'Sem Informação', 'Trabalho', 'Transporte', 'Urbanismo']
+```
+
+#### Tipo
+
+```
+['Constitucionais e Royalties', 'Legais, Voluntárias e Específicas']
+```
+
+##### Tipo de favorecido
+```
+['Administração Pública', 'Administração Pública Estadual ou do Distrito Federal', 'Administração Pública Federal', 'Administração Pública Municipal', 'Agentes Intermediários', 'Entidades Empresariais Privadas', 'Entidades Sem Fins Lucrativos', 'Fundo Público', 'Organizações Internacionais', 'Sem Informação']
+```
+
+##### Order By:
+```
+"str" (ex: "Ano")
+```
+
+##### Ascending e Group:
+```
+false (por padrão) ou true
+```
+
 -----
