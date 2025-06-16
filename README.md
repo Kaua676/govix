@@ -54,7 +54,7 @@ Para utilizar os filtros deve seguir essa estrutura de filtros:
     "favorecido": ["str"],
     "order_by": "str",
     "ascending": bool,
-    "group": bool
+    "group": ["str"]
 }
 ```
 
@@ -94,7 +94,7 @@ Para utilizar os filtros deve seguir essa estrutura de filtros:
 
 ##### Ascending e Group:
 ```
-false (por padrão) ou true
+["Tipo de Favorecido", "Programa Orçametário"]
 ```
 
 -----
