@@ -56,7 +56,7 @@ const MetricsCards = () => {
               <h3 className="text-sm font-medium text-slate-600">
                 {metric.title}
               </h3>
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-[#FC671D] rounded-lg flex items-center justify-center">
                 <IconComponent className="h-4 w-4 text-white" />
               </div>
             </div>

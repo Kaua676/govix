@@ -236,17 +236,26 @@ const InvestmentChart = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-lg">
+        <div
+          className="text-white p-4 rounded-lg"
+          style={{ backgroundColor: "#0BC0D3" }}
+        >
           <div className="text-sm opacity-90">Categoria Líder</div>
           <div className="text-2xl font-bold">Saúde</div>
           <div className="text-sm opacity-90">R$ 319 milhões</div>
         </div>
-        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-lg">
+        <div
+          className="text-white p-4 rounded-lg"
+          style={{ backgroundColor: "#D34AF4" }}
+        >
           <div className="text-sm opacity-90">Crescimento Mensal</div>
           <div className="text-2xl font-bold">+12.5%</div>
           <div className="text-sm opacity-90">Média semestre</div>
         </div>
-        <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-4 rounded-lg">
+        <div
+          className="text-white p-4 rounded-lg"
+          style={{ backgroundColor: "#FC671D" }}
+        >
           <div className="text-sm opacity-90">Próxima Alta</div>
           <div className="text-2xl font-bold">Tecnologia</div>
           <div className="text-sm opacity-90">Previsão: +45%</div>

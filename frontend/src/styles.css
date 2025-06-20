@@ -1,0 +1,18 @@
+.text-slate-600,
+.text-slate-700,
+.text-gray-600,
+.text-gray-700,
+.text-slate-800,
+label {
+    color: #2C006A !important;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select,
+input[type="checkbox"] {
+    border-color: #0BC0D3;
+    accent-color: #0BC0D3;
+}
