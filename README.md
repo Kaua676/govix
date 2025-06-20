@@ -99,7 +99,7 @@ Verificar ao fazer a consulta com o filtro de função pois existem diversos e s
 
 ##### Ascending e Group:
 ```
-["Tipo de Favorecido", "Programa Orçametário"]
+["Tipo de Favorecido", "Programa Orçamentário"]
 ```
 
 -----

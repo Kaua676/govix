@@ -1,13 +1,8 @@
-import { useState } from 'react'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Index from "./pages/Index";
 
-import './App.css'
+const queryClient = new QueryClient();
 
-function App() {
-  return (
-    <>
-      
-    </>
-  )
-}
+const App = () => <Index />;
 
-export default App
+export default App;
