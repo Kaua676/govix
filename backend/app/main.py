@@ -1,3 +1,5 @@
+import json
+from urllib.request import urlopen
 from flask import Flask, current_app, redirect
 from flask_cors import CORS
 import pandas as pd
@@ -64,8 +66,21 @@ def startup():
     global first
     if first:
         df = load_dataframe()
+        print(f"[DEBUG]✅ DataFrame carregado com {len(df)} linhas")
+
+        with urlopen('https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson') as response:
+            Brazil = json.load(response)
+            print(f"[DEBUG]✅ GeoJSON carregado: {len(Brazil)} linhas")
+        
+        state_id_map = {}
+        for feature in Brazil['features']:
+            uf = feature['properties']['sigla']
+            feature['id'] = uf
+            state_id_map[uf] = feature['properties']['name']
+
+
         current_app.config["df"] = df
-        print(f"✅ DataFrame carregado com {len(df)} linhas")
+        current_app.config["brazil_geo"] = Brazil
         first = False
 
 app.register_blueprint(data_bp)
