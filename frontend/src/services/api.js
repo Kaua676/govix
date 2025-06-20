@@ -5,7 +5,7 @@ export async function fetchData(content) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(content)
         })
-        // Teste
+        // teste
         if (!response.ok) {
             throw new Error(`Erro na requisição ${response.status}`)
         }
