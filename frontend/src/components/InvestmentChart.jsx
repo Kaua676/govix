@@ -31,7 +31,7 @@ ChartJS.register(
 );
 
 const InvestmentChart = () => {
-  const [chartType, setChartType] = useState("line");
+  const [chartType, setChartType] = useState("bar");
 
   const monthlyData = [
     {
@@ -182,10 +182,36 @@ const InvestmentChart = () => {
     },
   };
 
+  const radarOptions = {
+    maintainAspectRatio: false,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (ctx) => formatCurrency(ctx.parsed.r ?? ctx.parsed),
+        },
+      },
+    },
+    scales: {
+      r: {
+        ticks: {
+          display: false,
+        },
+        pointLabels: {
+          font: {
+            size: 12,
+          },
+          color: "#64748b",
+        },
+        grid: {
+          circular: true,
+        },
+      },
+    },
+  };
+
   const renderChart = () => {
     if (chartType === "line") return <Line data={lineData} options={options} />;
-    if (chartType === "bar")
-      return <Radar data={radarData} options={options} />;
+    if (chartType === "bar") return <Radar data={radarData} options={radarOptions} />;
     return <Pie data={pieData} options={{ maintainAspectRatio: false }} />;
   };
 
@@ -197,17 +223,6 @@ const InvestmentChart = () => {
             Análise de Investimentos
           </h2>
           <div className="flex space-x-2">
-            <button
-              className={`flex items-center px-3 py-1 rounded text-sm border ${
-                chartType === "line"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-slate-700 border-slate-300"
-              }`}
-              onClick={() => setChartType("line")}
-            >
-              <TrendingUp className="w-4 h-4 mr-1" />
-              Tendência
-            </button>
             <button
               className={`flex items-center px-3 py-1 rounded text-sm border ${
                 chartType === "bar"
@@ -230,9 +245,46 @@ const InvestmentChart = () => {
               <PieChartIcon className="w-4 h-4 mr-1" />
               Distribuição
             </button>
+            <button
+              className={`flex items-center px-3 py-1 rounded text-sm border ${
+                chartType === "line"
+                  ? "bg-blue-600 text-white"
+                  : "bg-white text-slate-700 border-slate-300"
+              }`}
+              onClick={() => setChartType("line")}
+            >
+              <TrendingUp className="w-4 h-4 mr-1" />
+              Tendência
+            </button>
           </div>
         </div>
         <div className="h-96">{renderChart()}</div>
+      </div>
+
+      {/* Tabela fora do container branco dos gráficos */}
+      <div className="overflow-auto mt-6 bg-white rounded-md border border-slate-300 p-4 max-w-full">
+        <table className="w-full table-auto text-sm">
+          <thead>
+            <tr className="bg-slate-100">
+              <th className="border px-3 py-2 text-left">Mês</th>
+              <th className="border px-3 py-2 text-right">Saúde</th>
+              <th className="border px-3 py-2 text-right">Educação</th>
+              <th className="border px-3 py-2 text-right">Segurança</th>
+              <th className="border px-3 py-2 text-right">Tecnologia</th>
+            </tr>
+          </thead>
+          <tbody>
+            {monthlyData.map(({ month, saude, educacao, seguranca, tecnologia }) => (
+              <tr key={month} className="odd:bg-white even:bg-slate-50">
+                <td className="border px-3 py-2">{month}</td>
+                <td className="border px-3 py-2 text-right">{formatCurrency(saude)}</td>
+                <td className="border px-3 py-2 text-right">{formatCurrency(educacao)}</td>
+                <td className="border px-3 py-2 text-right">{formatCurrency(seguranca)}</td>
+                <td className="border px-3 py-2 text-right">{formatCurrency(tecnologia)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

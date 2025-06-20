@@ -86,6 +86,8 @@ const Index = () => {
               </button>
             </div>
 
+            
+
             {/* Conteúdo da Tab */}
             <div className="space-y-6">
               {activeTab === "analytics" && <InvestmentChart />}
