@@ -1,4 +1,4 @@
-from flask import Flask, current_app
+from flask import Flask, current_app, redirect
 from flask_cors import CORS
 import pandas as pd
 import os
@@ -6,6 +6,8 @@ import glob
 from pathlib import Path
 import logging
 from controllers.data_controller import data_bp
+from flasgger import Swagger
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -14,6 +16,8 @@ print(f"[DEBUG] RESOURCES_FILES: {RESOURCES_FILES.resolve()}")
 
 app = Flask(__name__)
 CORS(app)
+Swagger(app)
+
 pd.options.display.float_format = '{:,.2f}'.format
 first = True
 def load_dataframe():
@@ -49,6 +53,11 @@ def load_dataframe():
     except Exception as e:
         logging.error(f"Erro ao carregar dados: {str(e)}")
         return pd.DataFrame()
+    
+
+@app.route("/")
+def initial():
+    return redirect("/apidocs")
 
 @app.before_request
 def startup():
