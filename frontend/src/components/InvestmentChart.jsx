@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Line, Pie, Radar } from "react-chartjs-2";
+import { Bar, Pie, Radar } from "react-chartjs-2";
 import { fetchData } from "../services/api.js"
 import {
   Chart as ChartJS,
@@ -40,7 +40,7 @@ const InvestmentChart = ({ filters }) => {
   const [chartType, setChartType] = useState("bar");
   const [monthlyData, setMonthlyData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
-
+  
   useEffect(() => {
     
     fetchData(filters)
