@@ -293,7 +293,7 @@ def mapa_funcao_ano():
       geojson=brazil_geo,
       locations="UF",
       locationmode="geojson-id",
-      color="Total Investido (R$)",
+      color="Total Investido",
       animation_frame="Ano",
       hover_name="UF",
       hover_data={},
