@@ -1,5 +1,10 @@
 import { useState } from "react";
+<<<<<<< Updated upstream
 import { Bar, Pie, Radar, Line } from "react-chartjs-2";
+=======
+import { Line, Pie, Radar } from "react-chartjs-2";
+import { fetchData } from "../services/api.js"
+>>>>>>> Stashed changes
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -19,6 +24,7 @@ import {
   TrendingUp,
   PieChart as PieChartIcon,
 } from "lucide-react";
+import { useEffect } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -34,62 +40,30 @@ ChartJS.register(
   BarController
 );
 
+<<<<<<< Updated upstream
 const InvestmentChart = () => {
   const [chartType, setChartType] = useState("line");
+=======
+const InvestmentChart = ({ filters }) => {
+  const [chartType, setChartType] = useState("bar");
+  const [monthlyData, setMonthlyData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+>>>>>>> Stashed changes
 
-  const monthlyData = [
-    {
-      month: "Jan/24",
-      saude: 45000000,
-      educacao: 38000000,
-      seguranca: 22000000,
-      tecnologia: 15000000,
-    },
-    {
-      month: "Fev/24",
-      saude: 52000000,
-      educacao: 41000000,
-      seguranca: 25000000,
-      tecnologia: 18000000,
-    },
-    {
-      month: "Mar/24",
-      saude: 48000000,
-      educacao: 45000000,
-      seguranca: 28000000,
-      tecnologia: 22000000,
-    },
-    {
-      month: "Abr/24",
-      saude: 58000000,
-      educacao: 39000000,
-      seguranca: 30000000,
-      tecnologia: 25000000,
-    },
-    {
-      month: "Mai/24",
-      saude: 61000000,
-      educacao: 47000000,
-      seguranca: 32000000,
-      tecnologia: 28000000,
-    },
-    {
-      month: "Jun/24",
-      saude: 55000000,
-      educacao: 52000000,
-      seguranca: 35000000,
-      tecnologia: 31000000,
-    },
-  ];
-
-  const categoryData = [
-    { name: "Saúde", value: 319000000, color: "#ef4444" },
-    { name: "Educação", value: 262000000, color: "#3b82f6" },
-    { name: "Segurança", value: 172000000, color: "#eab308" },
-    { name: "Tecnologia", value: 139000000, color: "#8b5cf6" },
-    { name: "Infraestrutura", value: 98000000, color: "#10b981" },
-    { name: "Meio Ambiente", value: 76000000, color: "#06b6d4" },
-  ];
+  useEffect(() => {
+    
+    fetchData(filters)
+      .then((dados) => {
+        setMonthlyData(dados.mensal || []);
+        setCategoryData(dados.categorias || []);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar dados:", error);
+        setMonthlyData([]); 
+        setCategoryData([]);
+      });
+  }, [filters]);
+  
 
   const formatCurrency = (value) =>
     new Intl.NumberFormat("pt-BR", {
