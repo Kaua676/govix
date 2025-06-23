@@ -1,9 +1,9 @@
-export async function fetchData(content) {
+export async function fetchData(payload) {
     try {
         const response = await fetch("http://127.0.0.1:5000/api/filtro_anual",{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(content)
+            body: JSON.stringify(payload)
         })
         // teste
         if (!response.ok) {
