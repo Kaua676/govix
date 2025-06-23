@@ -1,6 +1,8 @@
 # --- Ambiente Virtual do Projeto ('env/') ---
 # Cada membro da equipe deve criar e gerenciar seu próprio ambiente virtual localmente.
 # Por isso, a pasta 'env/' (nosso ambiente virtual) não é versionada.
+grafico_interativo.json
+
 venv/
 
 # --- Bytecode e Arquivos Compilados do Python ---
