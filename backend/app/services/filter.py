@@ -3,20 +3,7 @@ import pandas as pd
 
 pd.options.display.float_format = '{:,.2f}'.format
 
-def filtrar_dataframe(df):
-
-    params = {
-        "data_inicio": "2018-01",
-        "data_fim": "2025-12",
-        "uf": [],
-        "tipo": [],
-        "funcao": [],
-        "favorecido": [],
-        "programa": [],
-        "order_by": "Ano",
-        "ascending": "true",
-        "group": []
-    }
+def filtrar_dataframe(df, params):
 
     filtros = []
 

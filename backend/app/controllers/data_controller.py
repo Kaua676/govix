@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify, current_app
 import pandas as pd
 import plotly.io as pio
 import plotly.graph_objects as go
+import plotly.express as px
 from services.filter import filtrar_dataframe
 
 pd.options.display.float_format = '{:,.2f}'.format
@@ -155,9 +156,6 @@ def filtrar_dados():
     if group_by := params.get("group"):
         for g in group_by:
             group.append(g)
-    
-    print(group)
-
 
     # Combina os filtros com AND
     if filtros:
@@ -179,8 +177,6 @@ def filtrar_dados():
         .sort_values(by=order, ascending=ascending)
     )
 
-    print(resultado)
-
     return resultado.to_json(orient="records", force_ascii=False)
 
 @data_bp.route("/mapa", methods=["POST"])
@@ -199,12 +195,17 @@ def mapa_funcao_ano():
           schema:
             type: object
             properties:
-              ano:
-                type: integer
-                example: 2020
-              funcao:
+              data_inicio:
                 type: string
-                example: Saúde
+                example: 2020-01
+              data_fim:
+                type: string
+                example: 2025-12
+              funcoes:
+                type: array
+                items:
+                  type: string
+                example: ["Saúde"]
       responses:
         200:
           description: JSON com gráfico Plotly
@@ -223,43 +224,112 @@ def mapa_funcao_ano():
 
   params = request.json
 
-  ano = params.get("ano")
-  funcao = params.get("funcao")
+  if not params.get("data_inicio") or not params.get("data_fim") or not params.get("funcoes"):
+    return jsonify({"erro": "Parâmetros 'data_inicio', 'data_fim' e 'funcoes' são obrigatórios."}), 400
 
-  if not ano or not funcao:
-    return jsonify({"erro": "Parâmetros 'ano' e 'funcao' são obrigatórios."}), 400
+# Agora pode converter com segurança
+  data_inicio = pd.to_datetime(params["data_inicio"], format="%Y-%m")
+  data_fim = pd.to_datetime(params["data_fim"], format="%Y-%m")
+  funcoes = params.get("funcoes")
   
-  df_filtrado = filtrar_dataframe(df)
+  map_params = {
+    "data_inicio": data_inicio,
+    "data_fim": data_fim,
+    "uf": [],
+    "tipo": [],
+    "funcao": funcoes,
+    "favorecido": [],
+    "programa": [],
+    "order_by": "Ano",
+    "ascending": "true",
+    "group": []
+  }
+  
+  df_filtrado = filtrar_dataframe(df, map_params)
 
-  df_filtrado = df_filtrado[(df_filtrado["Ano"] == int(ano)) & (df_filtrado["Função"] == funcao)]
-  fig = go.Figure(go.Choropleth(
+  resultado_pivot = df_filtrado.pivot_table(
+            index=["UF", "Ano"],
+            columns="Função",
+            values="Total Investido",
+            aggfunc="sum",
+            fill_value=0
+        ).reset_index()
+          
+  # Adicionar coluna com total geral
+  resultado_pivot["Total Investido"] = resultado_pivot[funcoes].sum(axis=1)
+
+  # Garantir que todas as funções existam como colunas (mesmo que vazias)
+  for func in funcoes:
+    if func not in resultado_pivot.columns:
+      resultado_pivot[func] = 0
+      
+  def formatar_valor(valor):
+    return f"R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+  def gerar_hover_text(df, funcoes):
+      textos = []
+      for i, row in df.iterrows():
+          bloco_funcoes = "<br>".join([
+              f"{func}: {formatar_valor(row.get(func, 0))}" for func in funcoes
+          ])
+          texto = (
+              f"UF: {row['UF']}<br>"
+              f"Total Investido: {formatar_valor(row['Total Investido'])}"
+              "<br>--------<br>" +
+              bloco_funcoes
+          )
+          textos.append(texto)
+      return textos
+
+  # Adiciona a coluna text com hover customizado
+  resultado_pivot["text"] = gerar_hover_text(resultado_pivot, funcoes)
+
+  hover_dict = {col: ":,.2f" for col in ["Total Investido"] + funcoes}
+  hover_dict["Ano"] = False
+  hover_dict["UF"] = False
+
+  fig = px.choropleth(
+      resultado_pivot,
       geojson=brazil_geo,
-      locations=df_filtrado["UF"],
-      z=df_filtrado["Total Investido"],
+      locations="UF",
       locationmode="geojson-id",
-      colorscale=[
+      color="Total Investido (R$)",
+      animation_frame="Ano",
+      hover_name="UF",
+      hover_data={},
+      color_continuous_scale=[
           [0.0, "#22C55E"],
           [0.25, "#EAB308"],
           [0.5, "#F97316"],
           [1.0, "#DC2626"]
-      ],
-      colorbar_title="Investimento (R$)",
-      text=[
-          f"UF: {uf}<br>Total: R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-          for uf, valor in zip(df_filtrado["UF"], df_filtrado["Total Investido"])
-      ],
-      hovertemplate="%{text}<extra></extra>"
-  ))
+      ]
+  )
+  
+  fig.data[0].text = resultado_pivot["text"]
+  fig.update_traces(hovertemplate="%{text}<extra></extra>")
+  
+  for frame in fig.frames:
+    # Acha o ano atual do frame
+    ano_frame = int(frame.name)
 
+    # Filtra os dados daquele ano
+    df_ano = resultado_pivot[resultado_pivot["Ano"] == ano_frame].reset_index(drop=True)
+
+    # Atualiza o text no traço do frame
+    frame.data[0].text = df_ano["text"]
+    frame.data[0].hovertemplate = "%{text}<extra></extra>"
+  
   fig.update_geos(
       fitbounds="locations",
       visible=False
   )
 
   fig.update_layout(
-      title=f"Investimentos por Estado ({int(ano)} - {funcao})",
-      margin={"r":0,"t":40,"l":0,"b":0}
+      title="Investimentos por Estado (Total e por Função)",
+      margin={"r":0, "t":40, "l":0, "b":0}
   )
+  
+  fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2000
 
   fig.show()
 

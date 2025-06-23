@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Line, Pie, Radar } from "react-chartjs-2";
+import { Bar, Pie, Radar, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,6 +11,8 @@ import {
   RadialLinearScale,
   Tooltip,
   Legend,
+  BarElement,
+  BarController,
 } from "chart.js";
 import {
   BarChart as BarChartIcon,
@@ -27,11 +29,13 @@ ChartJS.register(
   RadarController,
   RadialLinearScale,
   Tooltip,
-  Legend
+  Legend,
+  BarElement,
+  BarController
 );
 
 const InvestmentChart = () => {
-  const [chartType, setChartType] = useState("bar");
+  const [chartType, setChartType] = useState("line");
 
   const monthlyData = [
     {
@@ -94,32 +98,28 @@ const InvestmentChart = () => {
       minimumFractionDigits: 0,
     }).format(value);
 
-  const lineData = {
+  const barData = {
     labels: monthlyData.map((d) => d.month),
     datasets: [
       {
         label: "Saúde",
         data: monthlyData.map((d) => d.saude),
-        borderColor: "#ef4444",
-        backgroundColor: "#ef444433",
+        backgroundColor: "#ef4444",
       },
       {
         label: "Educação",
         data: monthlyData.map((d) => d.educacao),
-        borderColor: "#3b82f6",
-        backgroundColor: "#3b82f633",
+        backgroundColor: "#3b82f6",
       },
       {
         label: "Segurança",
         data: monthlyData.map((d) => d.seguranca),
-        borderColor: "#eab308",
-        backgroundColor: "#eab30833",
+        backgroundColor: "#eab308",
       },
       {
         label: "Tecnologia",
         data: monthlyData.map((d) => d.tecnologia),
-        borderColor: "#8b5cf6",
-        backgroundColor: "#8b5cf633",
+        backgroundColor: "#8b5cf6",
       },
     ],
   };
@@ -182,6 +182,41 @@ const InvestmentChart = () => {
     },
   };
 
+  const barOptions = {
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Análise de Investimentos por Categoria (Mensal)'
+      },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => formatCurrency(ctx.parsed.y),
+        },
+      },
+    },
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true,
+        title: {
+          display: true,
+          text: 'Mês'
+        }
+      },
+      y: {
+        stacked: true,
+        ticks: {
+          callback: (value) => formatCurrency(value),
+        },
+        title: {
+          display: true,
+          text: 'Valor Investido'
+        }
+      },
+    },
+  };
+
   const radarOptions = {
     maintainAspectRatio: false,
     plugins: {
@@ -210,7 +245,7 @@ const InvestmentChart = () => {
   };
 
   const renderChart = () => {
-    if (chartType === "line") return <Line data={lineData} options={options} />;
+    if (chartType === "line") return <Bar data={barData} options={barOptions} />;
     if (chartType === "bar") return <Radar data={radarData} options={radarOptions} />;
     return <Pie data={pieData} options={{ maintainAspectRatio: false }} />;
   };
@@ -253,7 +288,7 @@ const InvestmentChart = () => {
               }`}
               onClick={() => setChartType("line")}
             >
-              <TrendingUp className="w-4 h-4 mr-1" />
+              <BarChartIcon className="w-4 h-4 mr-1" />
               Tendência
             </button>
           </div>
@@ -261,7 +296,6 @@ const InvestmentChart = () => {
         <div className="h-96">{renderChart()}</div>
       </div>
 
-      {/* Tabela fora do container branco dos gráficos */}
       <div className="overflow-auto mt-6 bg-white rounded-md border border-slate-300 p-4 max-w-full">
         <table className="w-full table-auto text-sm">
           <thead>
