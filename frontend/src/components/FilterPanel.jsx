@@ -227,6 +227,8 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
     });
   }
 
+  function handleApplyFilters() {}
+
   return (
     <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-lg sticky top-32 p-4 space-y-6">
       {/* Cabeçalho */}
@@ -247,39 +249,55 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
       <div className="space-y-3">
         <label className="text-sm font-semibold text-slate-700">Período</label>
         <div className="space-y-2">
-          <input
-            type="text"
-            placeholder="AAAA-MM"
-            value={
-              filters.period?.start === "0000-00" ? "" : filters.period.start
-            }
-            onChange={(e) =>
-              onFiltersChange({
-                ...filters,
-                period: {
-                  ...filters.period,
-                  start: e.target.value === "" ? "0000-00" : e.target.value,
-                },
-              })
-            }
-            className="w-full border border-slate-300 rounded px-2 py-1 text-sm"
-          />
+          {/* Campo de Início */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="period-start" className="text-sm w-12">
+              Início:
+            </label>
+            <input
+              id="period-start"
+              type="text"
+              placeholder="AAAA-MM"
+              value={
+                filters.period?.start === "0000-00" ? "" : filters.period.start
+              }
+              onChange={(e) =>
+                onFiltersChange({
+                  ...filters,
+                  period: {
+                    ...filters.period,
+                    start: e.target.value === "" ? "0000-00" : e.target.value,
+                  },
+                })
+              }
+              className="flex-1 border border-slate-300 rounded px-2 py-1 text-sm"
+            />
+          </div>
 
-          <input
-            type="text"
-            placeholder="AAAA-MM"
-            value={filters.period?.end === "0000-00" ? "" : filters.period.end}
-            onChange={(e) =>
-              onFiltersChange({
-                ...filters,
-                period: {
-                  ...filters.period,
-                  end: e.target.value === "" ? "0000-00" : e.target.value,
-                },
-              })
-            }
-            className="w-full border border-slate-300 rounded px-2 py-1 text-sm"
-          />
+          {/* Campo de Fim */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="period-end" className="text-sm w-12">
+              Fim:
+            </label>
+            <input
+              id="period-end"
+              type="text"
+              placeholder="AAAA-MM"
+              value={
+                filters.period?.end === "0000-00" ? "" : filters.period.end
+              }
+              onChange={(e) =>
+                onFiltersChange({
+                  ...filters,
+                  period: {
+                    ...filters.period,
+                    end: e.target.value === "" ? "0000-00" : e.target.value,
+                  },
+                })
+              }
+              className="flex-1 border border-slate-300 rounded px-2 py-1 text-sm"
+            />
+          </div>
         </div>
       </div>
 
@@ -413,6 +431,19 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
           ))}
         </select>
       </div>
+
+      <button
+        onClick={handleApplyFilters}
+        className="w-full bg-indigo-600 text-white rounded px-3 py-2 cursor-pointer"
+      >
+        Aplicar Filtros
+      </button>
+      <button
+        onClick={clearFilters}
+        className="w-full bg-red-600 text-white rounded px-3 py-2 cursor-pointer"
+      >
+        Limpar Filtros
+      </button>
     </div>
   );
 };
