@@ -1,43 +1,140 @@
-# Documentação do Projeto Govix
+# Govix IA
 
------
+Radar de Oportunidades Govtech
 
-## Visão Geral do Projeto
+## 📌 Descrição
 
-Este documento é o recurso central para todos os membros da equipe e partes interessadas do projeto **Govix**. Aqui você encontra informações essenciais sobre nossa equipe, o progresso do trabalho e o acesso aos repositórios de código.
+**Govix IA** é uma aplicação web que analisa transferências públicas e fornece insights estratégicos para empresas que atuam no setor **GovTech**. A plataforma integra dados governamentais com visualizações inteligentes, mapa de calor e um painel de recomendações baseadas em IA.
 
-O **Govix** tem como objetivo desenvolver uma **aplicação web inovadora para a Digix**. Nosso principal desafio é capacitar a Digix a identificar os setores de maior investimento governamental, permitindo o desenvolvimento dos produtos certos no momento certo.
+---
 
------
+## 🚀 Funcionalidades
 
-## Equipe do Projeto
+- API de dados com filtros por período, UF, função, tipo de favorecido e programa.
+- Dashboard interativo com gráficos de tendência, radar e distribuição.
+- Mapa de calor dos estados com ranking por investimentos.
+- Painel de recomendações com sugestões e indicadores de confiança.
+- Cartões de métricas com resumos de investimentos e oportunidades.
 
-Conheça os talentos por trás do projeto Govix:
+---
 
-  * **Gabriel Gravena Barros:** Desenvolvimento
-  * **Henrique Oliveira Silva:** Desenvolvimento
-  * **Kauã Vicente Domingos:** Design
-  * **Rhyan Santiago Komm:** Desenvolvimento
-  * **Rodrigo Terra Costa:** Produto
-  * **Thiago Carassini Teodoro Alves:** Desenvolvimento
-  * **Willdanthê Amorim Alaman:** Produto
+## 🧪 Tecnologias Utilizadas
 
------
+- **Backend:** Python 3, Flask, Pandas, Flasgger, Flask-CORS
+- **Frontend:** React, Vite, React Chart.js 2, Chart.js, Lucide React, TailwindCSS (via CDN)
+- **Outras libs:** React Query, ESLint
 
-## Recursos e Ferramentas
+---
 
-Utilizamos as seguintes plataformas para gerenciar nosso projeto e versionar o código:
+## 📂 Estrutura de Pastas
 
-### Trello
+```
+govix-project/
+├── backend/           # API Flask e dados CSV
+├── frontend/          # Aplicação React com Vite
+└── node_modules/      # Dependências do projeto
+```
 
-Nosso quadro no Trello é o coração do nosso gerenciamento de tarefas, acompanhamento do progresso e organização dos sprints.
+---
 
-  * **Link do Trello:** [link suspeito removido]
+## 🔧 Como Rodar o Projeto
 
-### GitHub
+### Pré-requisitos
 
-Todos os códigos-fonte do projeto são versionados e armazenados em nossos repositórios no GitHub, garantindo controle e colaboração.
+- [Node.js](https://nodejs.org/) v18+
+- [Python](https://www.python.org/) v3.10+
+- `pip` instalado
 
-  * **Link do Repositório Principal do GitHub:** [https://github.com/Kaua676/govix](https://github.com/Kaua676/govix)
+### Passo a passo
 
------
+```bash
+# Clone o repositório
+git clone https://github.com/Kaua676/govix.git
+cd govix-project
+
+# Backend
+cd backend
+pip install -r requirements.txt
+python app/main.py
+
+# Frontend (em outro terminal)
+cd ../frontend
+npm install
+npm run dev
+```
+
+Acesse `http://localhost:5173` no navegador. A documentação da API estará disponível em `http://localhost:5000/apidocs`.
+
+---
+
+## 🔗 Endpoints Principais
+
+- `POST /api/filtro_anual` – Aplica filtros sobre os dados de transferências públicas e retorna agregações.
+
+### Exemplo de payload:
+```json
+{
+  "data_inicio": "2023-01",
+  "data_fim": "2024-01",
+  "uf": ["SP", "RJ"],
+  "funcao": ["Saúde"],
+  "tipo": ["Constitucionais e Royalties"],
+  "favorecido": ["Administração Pública Municipal"],
+  "order_by": "Ano",
+  "ascending": true,
+  "group": ["Programa Orçamentário"]
+}
+```
+
+---
+
+## 📘 Valores de Filtros
+
+### UF
+`["SP", "RJ", "MG", ...]`
+
+### Função
+`["Educação", "Saúde", "Segurança pública", "Agricultura", ...]`
+
+### Tipo
+`["Constitucionais e Royalties", "Legais, Voluntárias e Específicas"]`
+
+### Favorecido
+`["Administração Pública", "Entidades Empresariais Privadas", "Fundo Público", ...]`
+
+### Programa
+> Os programas variam conforme a função selecionada. Consulte via API.
+
+### Agrupamento
+`["Tipo de Favorecido", "Programa Orçamentário"]`
+
+---
+
+## 👥 Equipe do Projeto
+
+| Nome                              | Função            |
+|-----------------------------------|-------------------|
+| Gabriel Gravena Barros            | Desenvolvimento   |
+| Henrique Oliveira Silva           | Desenvolvimento   |
+| Kauã Vicente Domingos             | Design            |
+| Rhyan Santiago Komm               | Desenvolvimento   |
+| Rodrigo Terra Costa               | Produto           |
+| Thiago Carassini Teodoro Alves    | Desenvolvimento   |
+| Willdanthê Amorim Alaman          | Produto           |
+
+---
+
+## 🛠 Ferramentas de Trabalho
+
+### 🔄 Trello
+Utilizado para organizar sprints e tarefas.
+
+### 💻 GitHub
+Repositório principal:  
+[https://github.com/Kaua676/govix](https://github.com/Kaua676/govix)
+
+---
+
+## 🙋‍♂️ Autor
+
+Mantido por [Kauã Vicente Domingos].
