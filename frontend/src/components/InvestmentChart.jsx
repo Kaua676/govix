@@ -1,10 +1,6 @@
 import { useState } from "react";
-<<<<<<< Updated upstream
-import { Bar, Pie, Radar, Line } from "react-chartjs-2";
-=======
 import { Line, Pie, Radar } from "react-chartjs-2";
 import { fetchData } from "../services/api.js"
->>>>>>> Stashed changes
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -40,15 +36,10 @@ ChartJS.register(
   BarController
 );
 
-<<<<<<< Updated upstream
-const InvestmentChart = () => {
-  const [chartType, setChartType] = useState("line");
-=======
 const InvestmentChart = ({ filters }) => {
   const [chartType, setChartType] = useState("bar");
   const [monthlyData, setMonthlyData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
->>>>>>> Stashed changes
 
   useEffect(() => {
     
