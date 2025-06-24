@@ -119,7 +119,7 @@ Acesse `http://localhost:5173` no navegador. A documentação da API estará dis
 | Kauã Vicente Domingos             | Design            |
 | Rhyan Santiago Komm               | Desenvolvimento   |
 | Rodrigo Terra Costa               | Produto           |
-| Thiago Carassini Teodoro Alves    | Desenvolvimento   |
+| Thiago Olszewski                  | Desenvolvimento   |
 | Willdanthê Amorim Alaman          | Produto           |
 
 ---
