@@ -1,4 +1,4 @@
-# Govix IA
+# Govix
 
 Radar de Oportunidades Govtech
 
@@ -50,7 +50,6 @@ govix-project/
 ```bash
 # Clone o repositório
 git clone https://github.com/Kaua676/govix.git
-cd govix-project
 
 # Backend
 cd backend
