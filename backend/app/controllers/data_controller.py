@@ -331,6 +331,6 @@ def mapa_funcao_ano():
   
   fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2000
 
-  fig.show()
+  # fig.show()
 
   return pio.to_json(fig)

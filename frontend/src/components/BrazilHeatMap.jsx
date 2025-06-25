@@ -1,4 +1,6 @@
 import { useState } from "react";
+import BrazilPlotlyHeatMap from "./BrazilPlotlyHeatMap.jsx";
+
 
 const BrazilHeatMap = () => {
   const [selectedState, setSelectedState] = useState(null);
@@ -106,11 +108,11 @@ const BrazilHeatMap = () => {
           </h2>
         </div>
         <div className="relative bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg p-8 min-h-96 flex items-center justify-center">
-          <div className="text-center space-y-4">
+          <div className="text-center space-y-4 w-full">
             <h3 className="text-xl font-bold text-slate-800">
               Mapa Interativo do Brasil
             </h3>
-            <p className="text-slate-600 max-w-md">Mapa aqui!</p>
+            <BrazilPlotlyHeatMap/>
           </div>
         </div>
 
