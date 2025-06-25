@@ -87,24 +87,6 @@ Acesse `http://localhost:5173` no navegador. A documentação da API estará dis
 
 ---
 
-## Funções
-
-Para utilizar os filtros deve seguir essa estrutura de filtros:
-
-```json
-{
-    "data_inicio": "YYYY-MM",
-    "data_fim": "YYYY-MM",
-    "uf": ["str"],
-    "funcao": ["str"],
-    "tipo": ["str"],
-    "favorecido": ["str"],
-    "order_by": "str",
-    "ascending": bool,
-    "group": ["str"]
-}
-```
-
 ## 📘 Valores de Filtros
 
 ### Data Início e Data Fim:
