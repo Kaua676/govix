@@ -6,6 +6,7 @@ import BrazilHeatMap from "../components/BrazilHeatMap";
 import RecommendationsPanel from "../components/RecommendationsPanel";
 import MetricsCards from "../components/MetricsCards";
 
+
 const Index = () => {
   const [filters, setFilters] = useState({
     period: { start: "", end: "" },
