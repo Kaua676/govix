@@ -8,7 +8,7 @@ import MetricsCards from "../components/MetricsCards";
 
 const Index = () => {
   const [filters, setFilters] = useState({
-    period: { start: "2018-01", end: "2018-01" },
+    period: { start: "", end: "" },
     categories: [],
     states: [],
   });

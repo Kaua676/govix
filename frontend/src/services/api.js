@@ -13,7 +13,7 @@ export async function fetchData(RawPayload) {
             throw new Error(`Erro na requisição ${response.status}`)
         }
 
-        return await response.json
+        return await response.json()
 
     } catch (error) {
         console.error(`erro ${error.message}`);

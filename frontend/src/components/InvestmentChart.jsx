@@ -1,24 +1,24 @@
 import { useState } from "react";
 import { Bar, Pie, Radar } from "react-chartjs-2";
-import { fetchData } from "../services/api.js"
+import { fetchData } from "../services/api.js";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
   ArcElement,
+  BarController,
+  BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
   RadarController,
   RadialLinearScale,
   Tooltip,
-  Legend,
-  BarElement,
-  BarController,
 } from "chart.js";
 import {
   BarChart as BarChartIcon,
-  TrendingUp,
   PieChart as PieChartIcon,
+  TrendingUp,
 } from "lucide-react";
 import { useEffect } from "react";
 
@@ -33,28 +33,27 @@ ChartJS.register(
   Tooltip,
   Legend,
   BarElement,
-  BarController
+  BarController,
 );
 
 const InvestmentChart = ({ filters }) => {
   const [chartType, setChartType] = useState("bar");
   const [monthlyData, setMonthlyData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
-  
+
   useEffect(() => {
-    
     fetchData(filters)
       .then((dados) => {
+        console.log("Resposata API: ", dados);
         setMonthlyData(dados.mensal || []);
         setCategoryData(dados.categorias || []);
       })
       .catch((error) => {
         console.error("Erro ao buscar dados:", error);
-        setMonthlyData([]); 
+        setMonthlyData([]);
         setCategoryData([]);
       });
   }, [filters]);
-  
 
   const formatCurrency = (value) =>
     new Intl.NumberFormat("pt-BR", {
@@ -152,7 +151,7 @@ const InvestmentChart = ({ filters }) => {
     plugins: {
       title: {
         display: true,
-        text: 'Análise de Investimentos por Categoria (Mensal)'
+        text: "Análise de Investimentos por Categoria (Mensal)",
       },
       tooltip: {
         callbacks: {
@@ -166,8 +165,8 @@ const InvestmentChart = ({ filters }) => {
         stacked: true,
         title: {
           display: true,
-          text: 'Mês'
-        }
+          text: "Mês",
+        },
       },
       y: {
         stacked: true,
@@ -176,8 +175,8 @@ const InvestmentChart = ({ filters }) => {
         },
         title: {
           display: true,
-          text: 'Valor Investido'
-        }
+          text: "Valor Investido",
+        },
       },
     },
   };
@@ -210,8 +209,10 @@ const InvestmentChart = ({ filters }) => {
   };
 
   const renderChart = () => {
-    if (chartType === "line") return <Bar data={barData} options={barOptions} />;
-    if (chartType === "bar") return <Radar data={radarData} options={radarOptions} />;
+    if (chartType === "bar") return <Bar data={barData} options={barOptions} />;
+    if (chartType === "line") {
+      return <Radar data={radarData} options={radarOptions} />;
+    }
     return <Pie data={pieData} options={{ maintainAspectRatio: false }} />;
   };
 
@@ -247,7 +248,7 @@ const InvestmentChart = ({ filters }) => {
             </button>
             <button
               className={`flex items-center px-3 py-1 rounded text-sm border ${
-                chartType === "line"
+                chartType === "pie"
                   ? "bg-blue-600 text-white"
                   : "bg-white text-slate-700 border-slate-300"
               }`}
@@ -273,13 +274,23 @@ const InvestmentChart = ({ filters }) => {
             </tr>
           </thead>
           <tbody>
-            {monthlyData.map(({ month, saude, educacao, seguranca, tecnologia }) => (
+            {monthlyData.map((
+              { month, saude, educacao, seguranca, tecnologia },
+            ) => (
               <tr key={month} className="odd:bg-white even:bg-slate-50">
                 <td className="border px-3 py-2">{month}</td>
-                <td className="border px-3 py-2 text-right">{formatCurrency(saude)}</td>
-                <td className="border px-3 py-2 text-right">{formatCurrency(educacao)}</td>
-                <td className="border px-3 py-2 text-right">{formatCurrency(seguranca)}</td>
-                <td className="border px-3 py-2 text-right">{formatCurrency(tecnologia)}</td>
+                <td className="border px-3 py-2 text-right">
+                  {formatCurrency(saude)}
+                </td>
+                <td className="border px-3 py-2 text-right">
+                  {formatCurrency(educacao)}
+                </td>
+                <td className="border px-3 py-2 text-right">
+                  {formatCurrency(seguranca)}
+                </td>
+                <td className="border px-3 py-2 text-right">
+                  {formatCurrency(tecnologia)}
+                </td>
               </tr>
             ))}
           </tbody>
