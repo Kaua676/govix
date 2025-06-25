@@ -19,6 +19,7 @@ import {
   BarChart as BarChartIcon,
   PieChart as PieChartIcon,
 } from "lucide-react";
+import BarChart from "./BarChart";
 
 ChartJS.register(
   CategoryScale,
@@ -247,8 +248,8 @@ const InvestmentChart = () => {
   };
 
   const renderChart = () => {
-    if (chartType === "line") return <Bar data={barData} options={barOptions} />;
-    if (chartType === "bar") return <Radar data={radarData} options={radarOptions} />;
+    if (chartType === "bar") return <BarChart />;
+    if (chartType === "radar") return <Radar data={radarData} options={radarOptions} />;
     return <Pie data={pieData} options={{ maintainAspectRatio: false }} />;
   };
 
@@ -259,11 +260,11 @@ const InvestmentChart = () => {
           <h2 className="text-lg font-semibold text-slate-800">Análise de Investimentos</h2>
           <div className="flex space-x-2">
             <button
-              className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "bar"
+              className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "radar"
                   ? "bg-blue-600 text-white"
                   : "bg-white text-slate-700 border-slate-300"
                 }`}
-              onClick={() => setChartType("bar")}
+              onClick={() => setChartType("radar")}
             >
               <BarChartIcon className="w-4 h-4 mr-1" />
               Radar
@@ -279,14 +280,14 @@ const InvestmentChart = () => {
               Distribuição
             </button>
             <button
-              className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "line"
+              className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "bar"
                   ? "bg-blue-600 text-white"
                   : "bg-white text-slate-700 border-slate-300"
                 }`}
-              onClick={() => setChartType("line")}
+              onClick={() => setChartType("bar")}
             >
               <BarChartIcon className="w-4 h-4 mr-1" />
-              Tendência
+              Barra
             </button>
           </div>
         </div>
