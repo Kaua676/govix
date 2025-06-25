@@ -87,25 +87,67 @@ Acesse `http://localhost:5173` no navegador. A documentação da API estará dis
 
 ---
 
+## Funções
+
+Para utilizar os filtros deve seguir essa estrutura de filtros:
+
+```json
+{
+    "data_inicio": "YYYY-MM",
+    "data_fim": "YYYY-MM",
+    "uf": ["str"],
+    "funcao": ["str"],
+    "tipo": ["str"],
+    "favorecido": ["str"],
+    "order_by": "str",
+    "ascending": bool,
+    "group": ["str"]
+}
+```
+
 ## 📘 Valores de Filtros
 
-### UF
-`["SP", "RJ", "MG", ...]`
+### Data Início e Data Fim:
+```
+"YYYY-MM" (ex: "2022-01")
+```
+
+### UF:
+```
+"str" (ex: "SP")
+```
 
 ### Função
-`["Educação", "Saúde", "Segurança pública", "Agricultura", ...]`
+
+```
+['Administração', 'Agricultura', 'Assistência social', 'Ciência e Tecnologia', 'Comunicações', 'Comércio e serviços', 'Cultura', 'Defesa nacional', 'Desporto e lazer', 'Direitos da cidadania', 'Educação', 'Encargos especiais', 'Energia', 'Gestão ambiental', 'Habitação', 'Indústria', 'Múltiplo', 'Organização agrária', 'Relações exteriores', 'Saneamento', 'Saúde', 'Segurança pública', 'Sem Informação', 'Trabalho', 'Transporte', 'Urbanismo']
+```
 
 ### Tipo
-`["Constitucionais e Royalties", "Legais, Voluntárias e Específicas"]`
 
-### Favorecido
-`["Administração Pública", "Entidades Empresariais Privadas", "Fundo Público", ...]`
+```
+['Constitucionais e Royalties', 'Legais, Voluntárias e Específicas']
+```
+
+#### Favorecido
+```
+['Administração Pública', 'Administração Pública Estadual ou do Distrito Federal', 'Administração Pública Federal', 'Administração Pública Municipal', 'Agentes Intermediários', 'Entidades Empresariais Privadas', 'Entidades Sem Fins Lucrativos', 'Fundo Público', 'Organizações Internacionais', 'Sem Informação']
+```
 
 ### Programa
-> Os programas variam conforme a função selecionada. Consulte via API.
+```
+Verificar ao fazer a consulta com o filtro de função pois existem diversos e são mutáveis.
+```
 
-### Agrupamento
-`["Tipo de Favorecido", "Programa Orçamentário"]`
+### Order By:
+```
+"str" (ex: "Ano")
+```
+
+### Ascending e Group:
+```
+["Tipo de Favorecido", "Programa Orçametário"]
+```
 
 ---
 
