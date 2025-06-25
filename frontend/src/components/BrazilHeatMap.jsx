@@ -1,81 +1,20 @@
 import { useState } from "react";
 import BrazilPlotlyHeatMap from "./BrazilPlotlyHeatMap.jsx";
 
-
 const BrazilHeatMap = () => {
   const [selectedState, setSelectedState] = useState(null);
 
   const stateData = [
-    {
-      state: "SP",
-      name: "São Paulo",
-      investment: 89000000000,
-      growth: 15.2,
-      opportunities: 456,
-    },
-    {
-      state: "RJ",
-      name: "Rio de Janeiro",
-      investment: 52000000000,
-      growth: 8.7,
-      opportunities: 287,
-    },
-    {
-      state: "MG",
-      name: "Minas Gerais",
-      investment: 38000000000,
-      growth: 12.1,
-      opportunities: 198,
-    },
-    {
-      state: "BA",
-      name: "Bahia",
-      investment: 24000000000,
-      growth: 18.3,
-      opportunities: 134,
-    },
-    {
-      state: "PR",
-      name: "Paraná",
-      investment: 22000000000,
-      growth: 9.4,
-      opportunities: 156,
-    },
-    {
-      state: "RS",
-      name: "Rio Grande do Sul",
-      investment: 21000000000,
-      growth: 6.8,
-      opportunities: 142,
-    },
-    {
-      state: "PE",
-      name: "Pernambuco",
-      investment: 16000000000,
-      growth: 22.1,
-      opportunities: 98,
-    },
-    {
-      state: "CE",
-      name: "Ceará",
-      investment: 14000000000,
-      growth: 16.7,
-      opportunities: 87,
-    },
-    {
-      state: "PA",
-      name: "Pará",
-      investment: 12000000000,
-      growth: 25.4,
-      opportunities: 76,
-    },
-    {
-      state: "SC",
-      name: "Santa Catarina",
-      investment: 11000000000,
-      growth: 11.3,
-      opportunities: 89,
-    },
+    { state: "SP", name: "São Paulo", investment: 89000000000, growth: 15.2, opportunities: 456 },
+    { state: "RJ", name: "Rio de Janeiro", investment: 52000000000, growth: 8.7, opportunities: 287 },
+    { state: "MG", name: "Minas Gerais", investment: 38000000000, growth: 12.1, opportunities: 198 },
+    { state: "BA", name: "Bahia", investment: 24000000000, growth: 18.3, opportunities: 134 },
+    { state: "PR", name: "Paraná", investment: 22000000000, growth: 9.4, opportunities: 156 },
+    { state: "RS", name: "Rio Grande do Sul", investment: 21000000000, growth: 6.8, opportunities: 142 },
+    { state: "PE", name: "Pernambuco", investment: 16000000000, growth: 22.1, opportunities: 98 },
+    { state: "CE", name: "Ceará", investment: 14000000000, growth: 16.7, opportunities: 87 },
+    { state: "PA", name: "Pará", investment: 12000000000, growth: 25.4, opportunities: 76 },
+    { state: "SC", name: "Santa Catarina", investment: 11000000000, growth: 11.3, opportunities: 89 },
   ];
 
   const getIntensityColor = (investment) => {
@@ -89,11 +28,8 @@ const BrazilHeatMap = () => {
   };
 
   const formatCurrency = (value) => {
-    if (value >= 1000000000) {
-      return `R$ ${(value / 1000000000).toFixed(1)}bi`;
-    } else if (value >= 1000000) {
-      return `R$ ${(value / 1000000).toFixed(1)}mi`;
-    }
+    if (value >= 1_000_000_000) return `R$ ${(value / 1_000_000_000).toFixed(1)}bi`;
+    if (value >= 1_000_000) return `R$ ${(value / 1_000_000).toFixed(1)}mi`;
     return `R$ ${value.toLocaleString("pt-BR")}`;
   };
 
@@ -112,7 +48,7 @@ const BrazilHeatMap = () => {
             <h3 className="text-xl font-bold text-slate-800">
               Mapa Interativo do Brasil
             </h3>
-            <BrazilPlotlyHeatMap/>
+            <BrazilPlotlyHeatMap />
           </div>
         </div>
 
@@ -134,42 +70,26 @@ const BrazilHeatMap = () => {
 
       {/* Ranking */}
       <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-lg p-4">
-        <h2 className="text-lg text-slate-800 font-semibold mb-4">
-          Ranking por Estado
-        </h2>
+        <h2 className="text-lg text-slate-800 font-semibold mb-4">Ranking por Estado</h2>
         <div className="space-y-3">
           {stateData.map((state, index) => (
             <div
               key={state.state}
               className="flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-              onClick={() =>
-                setSelectedState(
-                  selectedState === state.state ? null : state.state
-                )
-              }
+              onClick={() => setSelectedState(selectedState === state.state ? null : state.state)}
             >
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
-                  <span className="text-lg font-bold text-slate-600">
-                    #{index + 1}
-                  </span>
-                  <div
-                    className={`w-4 h-4 rounded ${getIntensityColor(
-                      state.investment
-                    )}`}
-                  />
+                  <span className="text-lg font-bold text-slate-600">#{index + 1}</span>
+                  <div className={`w-4 h-4 rounded ${getIntensityColor(state.investment)}`} />
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-800">{state.name}</h4>
-                  <p className="text-sm text-slate-600">
-                    {state.opportunities} oportunidades ativas
-                  </p>
+                  <p className="text-sm text-slate-600">{state.opportunities} oportunidades ativas</p>
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-bold text-slate-800">
-                  {formatCurrency(state.investment)}
-                </div>
+                <div className="font-bold text-slate-800">{formatCurrency(state.investment)}</div>
                 <div className="text-sm text-green-600">+{state.growth}%</div>
               </div>
             </div>
@@ -180,27 +100,9 @@ const BrazilHeatMap = () => {
       {/* Destaques Regionais */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
-          {
-            title: "Região Líder",
-            value: "Sudeste",
-            extra: "62% do total",
-            from: "blue-500",
-            to: "blue-600",
-          },
-          {
-            title: "Maior Crescimento",
-            value: "Nordeste",
-            extra: "+19.2% média",
-            from: "green-500",
-            to: "green-600",
-          },
-          {
-            title: "Emergente",
-            value: "Norte",
-            extra: "+23.5% potencial",
-            from: "purple-500",
-            to: "purple-600",
-          },
+          { title: "Região Líder", value: "Sudeste", extra: "62% do total", from: "blue-500", to: "blue-600" },
+          { title: "Maior Crescimento", value: "Nordeste", extra: "+19.2% média", from: "green-500", to: "green-600" },
+          { title: "Emergente", value: "Norte", extra: "+23.5% potencial", from: "purple-500", to: "purple-600" },
         ].map((region) => (
           <div
             key={region.value}
