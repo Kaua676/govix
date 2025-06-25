@@ -4,108 +4,108 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
   // Lista de categorias com nome e cor
   const categories = [
     {
-      id: "administracao",
+      id: "Administração",
       label: "Administração",
       color: "bg-slate-100 text-slate-800",
     },
     {
-      id: "agricultura",
+      id: "Agricultura",
       label: "Agricultura",
       color: "bg-green-100 text-green-800",
     },
     {
-      id: "assistencia-social",
+      id: "Assistência social",
       label: "Assistência social",
       color: "bg-pink-100 text-pink-800",
     },
     {
-      id: "ciencia-tecnologia",
+      id: "Ciência e Tecnologia",
       label: "Ciência e Tecnologia",
       color: "bg-purple-100 text-purple-800",
     },
     {
-      id: "comunicacoes",
+      id: "Comunicações",
       label: "Comunicações",
       color: "bg-blue-100 text-blue-800",
     },
     {
-      id: "comercio-servicos",
+      id: "Comércio e serviços",
       label: "Comércio e serviços",
       color: "bg-yellow-100 text-yellow-800",
     },
-    { id: "cultura", label: "Cultura", color: "bg-rose-100 text-rose-800" },
+    { id: "Cultura", label: "Cultura", color: "bg-rose-100 text-rose-800" },
     {
-      id: "defesa-nacional",
+      id: "Defesa nacional",
       label: "Defesa nacional",
       color: "bg-red-100 text-red-800",
     },
     {
-      id: "desporto-lazer",
+      id: "Desporto e lazer",
       label: "Desporto e lazer",
       color: "bg-orange-100 text-orange-800",
     },
     {
-      id: "direitos-cidadania",
+      id: "Direitos da cidadania",
       label: "Direitos da cidadania",
       color: "bg-emerald-100 text-emerald-800",
     },
-    { id: "educacao", label: "Educação", color: "bg-cyan-100 text-cyan-800" },
+    { id: "Educação", label: "Educação", color: "bg-cyan-100 text-cyan-800" },
     {
-      id: "encargos-especiais",
+      id: "Encargos especiais",
       label: "Encargos especiais",
       color: "bg-gray-100 text-gray-800",
     },
-    { id: "energia", label: "Energia", color: "bg-yellow-200 text-yellow-900" },
+    { id: "Energia", label: "Energia", color: "bg-yellow-200 text-yellow-900" },
     {
-      id: "gestao-ambiental",
+      id: "Gestão ambiental",
       label: "Gestão ambiental",
       color: "bg-green-200 text-green-900",
     },
-    { id: "habitacao", label: "Habitação", color: "bg-blue-200 text-blue-900" },
+    { id: "Habitação", label: "Habitação", color: "bg-blue-200 text-blue-900" },
     {
-      id: "industria",
+      id: "Indústria",
       label: "Indústria",
       color: "bg-indigo-100 text-indigo-800",
     },
     {
-      id: "multiplo",
+      id: "Múltiplo",
       label: "Múltiplo",
       color: "bg-fuchsia-100 text-fuchsia-800",
     },
     {
-      id: "organizacao-agraria",
+      id: "Organização agrária",
       label: "Organização agrária",
       color: "bg-lime-100 text-lime-800",
     },
     {
-      id: "relacoes-exteriores",
+      id: "Relações exteriores",
       label: "Relações exteriores",
       color: "bg-teal-100 text-teal-800",
     },
-    { id: "saneamento", label: "Saneamento", color: "bg-sky-100 text-sky-800" },
-    { id: "saude", label: "Saúde", color: "bg-red-200 text-red-900" },
+    { id: "Saneamento", label: "Saneamento", color: "bg-sky-100 text-sky-800" },
+    { id: "Saúde", label: "Saúde", color: "bg-red-200 text-red-900" },
     {
-      id: "seguranca-publica",
+      id: "Segurança pública",
       label: "Segurança pública",
       color: "bg-yellow-300 text-yellow-900",
     },
     {
-      id: "sem-informacao",
+      id: "Sem Informação",
       label: "Sem Informação",
       color: "bg-zinc-100 text-zinc-800",
     },
     {
-      id: "trabalho",
+      id: "Trabalho",
       label: "Trabalho",
       color: "bg-orange-200 text-orange-900",
     },
     {
-      id: "transporte",
+      id: "Transporte",
       label: "Transporte",
       color: "bg-indigo-200 text-indigo-900",
     },
     {
-      id: "urbanismo",
+      id: "Urbanismo",
       label: "Urbanismo",
       color: "bg-amber-100 text-amber-800",
     },
@@ -113,33 +113,33 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
 
   // Lista de todos os estados do Brasil
   const states = [
-    "Acre",
-    "Alagoas",
-    "Amapá",
-    "Amazonas",
-    "Bahia",
-    "Ceará",
-    "Distrito Federal",
-    "Espírito Santo",
-    "Goiás",
-    "Maranhão",
-    "Mato Grosso",
-    "Mato Grosso do Sul",
-    "Minas Gerais",
-    "Pará",
-    "Paraíba",
-    "Paraná",
-    "Pernambuco",
-    "Piauí",
-    "Rio de Janeiro",
-    "Rio Grande do Norte",
-    "Rio Grande do Sul",
-    "Rondônia",
-    "Roraima",
-    "Santa Catarina",
-    "São Paulo",
-    "Sergipe",
-    "Tocantins",
+    "AC",
+    "AL",
+    "AP",
+    "AM",
+    "BA",
+    "CE",
+    "DF",
+    "ES",
+    "GO",
+    "MA",
+    "MT",
+    "MS",
+    "MG",
+    "PA",
+    "PB",
+    "PR",
+    "PE",
+    "PI",
+    "RJ",
+    "RN",
+    "RS",
+    "RO",
+    "RR",
+    "SC",
+    "SP",
+    "SE",
+    "TO",
   ];
 
   const tiposTransferencia = [
@@ -162,7 +162,8 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
 
   const orderByOptions = ["Ano", "UF"];
   const groupByOptions = ["Tipo de Favorecido", "Programa Orçamentário"];
-
+  const [localPeriodStart, setLocalPeriodStart] = useState(filters.period.start || "");
+  const [localPeriodEnd, setLocalPeriodEnd] = useState(filters.period.end || "");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedStates, setSelectedStates] = useState([]);
   const [selectedTipo, setSelectedTipo] = useState("");
@@ -176,7 +177,6 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
       : selectedCategories.filter((item) => item !== id);
 
     setSelectedCategories(updated);
-    onFiltersChange({ ...filters, categories: updated });
   }
 
   function handleStateChange(state, isChecked) {
@@ -185,50 +185,58 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
       : selectedStates.filter((item) => item !== state);
 
     setSelectedStates(updated);
-    onFiltersChange({ ...filters, states: updated });
   }
 
   function handleTipoChange(value) {
     setSelectedTipo(value);
-    onFiltersChange({ ...filters, tipo: value });
   }
 
   function handleFavorecidoChange(value) {
     setSelectedFavorecido(value);
-    onFiltersChange({ ...filters, favorecido: value });
   }
 
   function handleOrderByChange(value) {
     setSelectedOrderBy(value);
-    onFiltersChange({ ...filters, orderBy: value });
   }
 
   function handleGroupByChange(value) {
     setSelectedGroupBy(value);
-    onFiltersChange({ ...filters, groupBy: value });
   }
 
   function clearFilters() {
+    setLocalPeriodStart("");
+    setLocalPeriodEnd("");
     setSelectedCategories([]);
-    setSelectedStates([]);
+    setSelectedStates([""]);
     setSelectedTipo("");
-    setSelectedFavorecido("");
+    setSelectedFavorecido([]);
     setSelectedOrderBy("");
     setSelectedGroupBy("");
-
     onFiltersChange({
-      period: { start: "0000-00", end: "0000-00" },
+      period: { start: "", end: "" },
       categories: [],
-      states: [],
+      states: [""],
       tipo: "",
-      favorecido: "",
+      favorecido: [],
       orderBy: "",
       groupBy: "",
     });
   }
 
-  function handleApplyFilters() {}
-
+  function handleApplyFilters() {
+  onFiltersChange({
+    period: {
+      start: localPeriodStart === "" ? "0000-00" : localPeriodStart,
+      end: localPeriodEnd === "" ? "0000-00" : localPeriodEnd,
+    },
+    categories: selectedCategories,
+    states: selectedStates,
+    tipo: selectedTipo,
+    favorecido: selectedFavorecido,
+    orderBy: selectedOrderBy,
+    groupBy: selectedGroupBy,
+  });
+}
   return (
     <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-lg sticky top-32 p-4 space-y-6">
       {/* Cabeçalho */}
@@ -259,16 +267,10 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
               type="text"
               placeholder="AAAA-MM"
               value={
-                filters.period?.start === "0000-00" ? "" : filters.period.start
+                localPeriodStart === "0000-00" ? "" : localPeriodStart
               }
               onChange={(e) =>
-                onFiltersChange({
-                  ...filters,
-                  period: {
-                    ...filters.period,
-                    start: e.target.value === "" ? "0000-00" : e.target.value,
-                  },
-                })
+                setLocalPeriodStart(e.target.value)
               }
               className="flex-1 border border-slate-300 rounded px-2 py-1 text-sm"
             />
@@ -284,17 +286,10 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
               type="text"
               placeholder="AAAA-MM"
               value={
-                filters.period?.end === "0000-00" ? "" : filters.period.end
+                localPeriodEnd === "0000-00" ? "" : localPeriodEnd
               }
-              onChange={(e) =>
-                onFiltersChange({
-                  ...filters,
-                  period: {
-                    ...filters.period,
-                    end: e.target.value === "" ? "0000-00" : e.target.value,
-                  },
-                })
-              }
+              onChange={(e) => 
+                setLocalPeriodEnd(e.target.value)}
               className="flex-1 border border-slate-300 rounded px-2 py-1 text-sm"
             />
           </div>
@@ -314,7 +309,8 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
               type="checkbox"
               id={cat.id}
               checked={selectedCategories.includes(cat.id)}
-              onChange={(e) => handleCategoryChange(cat.id, e.target.checked)}
+              onChange={(e) =>
+                handleCategoryChange(cat.id, e.target.checked)}
             />
             <label htmlFor={cat.id} className="text-sm cursor-pointer">
               <span className={`inline-block px-2 py-1 rounded ${cat.color}`}>
@@ -337,7 +333,8 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
                 type="checkbox"
                 id={estado}
                 checked={selectedStates.includes(estado)}
-                onChange={(e) => handleStateChange(estado, e.target.checked)}
+                onChange={(e) =>
+                  handleStateChange(estado, e.target.checked)}
               />
               <label htmlFor={estado} className="text-sm cursor-pointer">
                 {estado}
@@ -363,9 +360,10 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
               onChange={(e) => {
                 const updated = e.target.checked
                   ? [...selectedFavorecido, fav]
-                  : selectedFavorecido.filter((item) => item !== fav);
+                  : selectedFavorecido.filter((item) =>
+                    item !== fav
+                  );
                 setSelectedFavorecido(updated);
-                onFiltersChange({ ...filters, favorecido: updated });
               }}
             />
             <label htmlFor={fav} className="text-sm cursor-pointer">

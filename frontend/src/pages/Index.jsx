@@ -9,7 +9,7 @@ import MetricsCards from "../components/MetricsCards";
 
 const Index = () => {
   const [filters, setFilters] = useState({
-    period: { start: "0000-00", end: "0000-00" },
+    period: { start: "", end: "" },
     categories: [],
     states: [],
   });
@@ -91,7 +91,7 @@ const Index = () => {
 
             {/* Conteúdo da Tab */}
             <div className="space-y-6">
-              {activeTab === "analytics" && <InvestmentChart />}
+              {activeTab === "analytics" && <InvestmentChart filters={filters}/>}
               {activeTab === "map" && <BrazilHeatMap filters={filters} />}
               {activeTab === "recommendations" && (
                 <RecommendationsPanel filters={filters} />

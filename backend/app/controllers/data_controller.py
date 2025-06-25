@@ -310,7 +310,7 @@ def filtrar_dados():
 
     ascending = json.loads(params.get("ascending").lower()) if params.get("ascending") else False
 
-    group = ["Ano", "UF", "Função", "Tipo"]
+    group = ["Ano", "UF", "Função"]
     if group_by := params.get("group"):
         for g in group_by:
             group.append(g)

@@ -1,24 +1,26 @@
 import { useState } from "react";
-import { Bar, Pie, Radar, Line } from "react-chartjs-2";
+import { Bar, Pie, Radar } from "react-chartjs-2";
+import { fetchData } from "../services/api.js";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
   ArcElement,
+  BarController,
+  BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
   RadarController,
   RadialLinearScale,
   Tooltip,
-  Legend,
-  BarElement,
-  BarController,
 } from "chart.js";
 import {
   BarChart as BarChartIcon,
-  TrendingUp,
   PieChart as PieChartIcon,
+  TrendingUp,
 } from "lucide-react";
+import { useEffect } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -31,65 +33,27 @@ ChartJS.register(
   Tooltip,
   Legend,
   BarElement,
-  BarController
+  BarController,
 );
 
-const InvestmentChart = () => {
-  const [chartType, setChartType] = useState("line");
+const InvestmentChart = ({ filters }) => {
+  const [chartType, setChartType] = useState("bar");
+  const [monthlyData, setMonthlyData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
 
-  const monthlyData = [
-    {
-      month: "Jan/24",
-      saude: 45000000,
-      educacao: 38000000,
-      seguranca: 22000000,
-      tecnologia: 15000000,
-    },
-    {
-      month: "Fev/24",
-      saude: 52000000,
-      educacao: 41000000,
-      seguranca: 25000000,
-      tecnologia: 18000000,
-    },
-    {
-      month: "Mar/24",
-      saude: 48000000,
-      educacao: 45000000,
-      seguranca: 28000000,
-      tecnologia: 22000000,
-    },
-    {
-      month: "Abr/24",
-      saude: 58000000,
-      educacao: 39000000,
-      seguranca: 30000000,
-      tecnologia: 25000000,
-    },
-    {
-      month: "Mai/24",
-      saude: 61000000,
-      educacao: 47000000,
-      seguranca: 32000000,
-      tecnologia: 28000000,
-    },
-    {
-      month: "Jun/24",
-      saude: 55000000,
-      educacao: 52000000,
-      seguranca: 35000000,
-      tecnologia: 31000000,
-    },
-  ];
-
-  const categoryData = [
-    { name: "Saúde", value: 319000000, color: "#ef4444" },
-    { name: "Educação", value: 262000000, color: "#3b82f6" },
-    { name: "Segurança", value: 172000000, color: "#eab308" },
-    { name: "Tecnologia", value: 139000000, color: "#8b5cf6" },
-    { name: "Infraestrutura", value: 98000000, color: "#10b981" },
-    { name: "Meio Ambiente", value: 76000000, color: "#06b6d4" },
-  ];
+  useEffect(() => {
+    fetchData(filters)
+      .then((dados) => {
+        console.log("Resposata API: ", dados);
+        setMonthlyData(dados.mensal || []);
+        setCategoryData(dados.categorias || []);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar dados:", error);
+        setMonthlyData([]);
+        setCategoryData([]);
+      });
+  }, [filters]);
 
   const formatCurrency = (value) =>
     new Intl.NumberFormat("pt-BR", {
@@ -187,7 +151,7 @@ const InvestmentChart = () => {
     plugins: {
       title: {
         display: true,
-        text: 'Análise de Investimentos por Categoria (Mensal)'
+        text: "Análise de Investimentos por Categoria (Mensal)",
       },
       tooltip: {
         callbacks: {
@@ -201,8 +165,8 @@ const InvestmentChart = () => {
         stacked: true,
         title: {
           display: true,
-          text: 'Mês'
-        }
+          text: "Mês",
+        },
       },
       y: {
         stacked: true,
@@ -211,8 +175,8 @@ const InvestmentChart = () => {
         },
         title: {
           display: true,
-          text: 'Valor Investido'
-        }
+          text: "Valor Investido",
+        },
       },
     },
   };
@@ -245,8 +209,10 @@ const InvestmentChart = () => {
   };
 
   const renderChart = () => {
-    if (chartType === "line") return <Bar data={barData} options={barOptions} />;
-    if (chartType === "bar") return <Radar data={radarData} options={radarOptions} />;
+    if (chartType === "bar") return <Bar data={barData} options={barOptions} />;
+    if (chartType === "line") {
+      return <Radar data={radarData} options={radarOptions} />;
+    }
     return <Pie data={pieData} options={{ maintainAspectRatio: false }} />;
   };
 
@@ -282,7 +248,7 @@ const InvestmentChart = () => {
             </button>
             <button
               className={`flex items-center px-3 py-1 rounded text-sm border ${
-                chartType === "line"
+                chartType === "pie"
                   ? "bg-blue-600 text-white"
                   : "bg-white text-slate-700 border-slate-300"
               }`}
@@ -308,13 +274,23 @@ const InvestmentChart = () => {
             </tr>
           </thead>
           <tbody>
-            {monthlyData.map(({ month, saude, educacao, seguranca, tecnologia }) => (
+            {monthlyData.map((
+              { month, saude, educacao, seguranca, tecnologia },
+            ) => (
               <tr key={month} className="odd:bg-white even:bg-slate-50">
                 <td className="border px-3 py-2">{month}</td>
-                <td className="border px-3 py-2 text-right">{formatCurrency(saude)}</td>
-                <td className="border px-3 py-2 text-right">{formatCurrency(educacao)}</td>
-                <td className="border px-3 py-2 text-right">{formatCurrency(seguranca)}</td>
-                <td className="border px-3 py-2 text-right">{formatCurrency(tecnologia)}</td>
+                <td className="border px-3 py-2 text-right">
+                  {formatCurrency(saude)}
+                </td>
+                <td className="border px-3 py-2 text-right">
+                  {formatCurrency(educacao)}
+                </td>
+                <td className="border px-3 py-2 text-right">
+                  {formatCurrency(seguranca)}
+                </td>
+                <td className="border px-3 py-2 text-right">
+                  {formatCurrency(tecnologia)}
+                </td>
               </tr>
             ))}
           </tbody>
