@@ -1,40 +1,61 @@
+import { useEffect, useState } from "react";
 import { TrendingUp, DollarSign, Building, Calendar } from "lucide-react";
+import { fetchData } from "../services/api";
 
-const MetricsCards = () => {
-  const metrics = [
-    {
-      title: "Investimento Total",
-      value: "R$ 847,2 bi",
-      change: "+12.5%",
-      trend: "up",
-      icon: DollarSign,
-      description: "Orçamento federal 2024",
-    },
-    {
-      title: "Oportunidades Ativas",
-      value: "2.847",
-      change: "+8.3%",
-      trend: "up",
-      icon: TrendingUp,
-      description: "Editais e licitações abertas",
-    },
-    {
-      title: "Órgãos Participantes",
-      value: "156",
-      change: "+2.1%",
-      trend: "up",
-      icon: Building,
-      description: "Ministérios e autarquias",
-    },
-    {
-      title: "Última Atualização",
-      value: "Hoje",
-      change: "14:32",
-      trend: "neutral",
-      icon: Calendar,
-      description: "Sincronização automática",
-    },
-  ];
+const MetricsCards = ({ filters }) => {
+  const [metrics, setMetrics] = useState([]);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const data = await fetchData({ ...filters });
+        const total = data.reduce((sum, d) => sum + d["Total Investido"], 0);
+        const opportunities = data.length;
+        const orgaos = new Set(data.map((d) => d["UF"])).size;
+        const newMetrics = [
+          {
+            title: "Investimento Total",
+            value: new Intl.NumberFormat("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            }).format(total),
+            change: "",
+            trend: "up",
+            icon: DollarSign,
+            description: "Total filtrado",
+          },
+          {
+            title: "Oportunidades Ativas",
+            value: opportunities.toString(),
+            change: "",
+            trend: "up",
+            icon: TrendingUp,
+            description: "Registros retornados",
+          },
+          {
+            title: "UFs Encontradas",
+            value: orgaos.toString(),
+            change: "",
+            trend: "up",
+            icon: Building,
+            description: "Estados distintos",
+          },
+          {
+            title: "Última Atualização",
+            value: new Date().toLocaleDateString("pt-BR"),
+            change: new Date().toLocaleTimeString("pt-BR"),
+            trend: "neutral",
+            icon: Calendar,
+            description: "Atualização local",
+          },
+        ];
+        setMetrics(newMetrics);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    load();
+  }, [filters]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -44,8 +65,8 @@ const MetricsCards = () => {
           metric.trend === "up"
             ? "text-green-600"
             : metric.trend === "down"
-            ? "text-red-600"
-            : "text-slate-600";
+              ? "text-red-600"
+              : "text-slate-600";
 
         return (
           <div
