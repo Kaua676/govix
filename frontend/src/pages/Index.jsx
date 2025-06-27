@@ -6,12 +6,15 @@ import BrazilHeatMap from "../components/BrazilHeatMap";
 import RecommendationsPanel from "../components/RecommendationsPanel";
 import MetricsCards from "../components/MetricsCards";
 
-
 const Index = () => {
   const [filters, setFilters] = useState({
     period: { start: "", end: "" },
     categories: [],
     states: [],
+    tipo: "",
+    favorecido: [],
+    orderBy: "",
+    groupBy: "",
   });
 
   const [activeTab, setActiveTab] = useState("analytics");
@@ -87,11 +90,11 @@ const Index = () => {
               </button>
             </div>
 
-            
-
             {/* Conteúdo da Tab */}
             <div className="space-y-6">
-              {activeTab === "analytics" && <InvestmentChart filters={filters}/>}
+              {activeTab === "analytics" && (
+                <InvestmentChart filters={filters} />
+              )}
               {activeTab === "map" && <BrazilHeatMap filters={filters} />}
               {activeTab === "recommendations" && (
                 <RecommendationsPanel filters={filters} />
