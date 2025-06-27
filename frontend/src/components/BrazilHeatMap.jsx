@@ -1,31 +1,111 @@
-import { useState } from "react";
-import BrazilPlotlyHeatMap from "./BrazilPlotlyHeatMap.jsx";
+import { useEffect, useState } from "react";
+import BrazilPlotlyHeatMap from "./BrazilPlotlyHeatMap.jsx"; 
+
+async function fetchData(rawPayload) {
+  const payload = normalizePayload(rawPayload);
+  try {
+    console.log("[fetchData] payload:", payload);
+    const response = await fetch("http://localhost:5000/api/filtro_anual", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro na requisição ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Erro no fetchData:", error.message);
+    throw error;
+  }
+}
+
+function normalizePayload(filters) {
+  const payload = {
+    ascending: filters.ascending ?? false,
+    data_fim: filters.period?.end || "2024-12",
+    data_inicio: filters.period?.start || "2020-01",
+    order_by: filters.orderBy || "Ano",
+  };
+
+  if (Array.isArray(filters.favorecido) && filters.favorecido.length > 0) {
+    payload.favorecido = filters.favorecido;
+  }
+  if (Array.isArray(filters.categories) && filters.categories.length > 0) {
+    payload.funcao = filters.categories;
+  }
+  if (Array.isArray(filters.groupBy) && filters.groupBy.length > 0) {
+    payload.group = filters.groupBy;
+  }
+  if (Array.isArray(filters.programa) && filters.programa.length > 0) {
+    payload.programa = filters.programa;
+  }
+  if (Array.isArray(filters.tipo) && filters.tipo.length > 0) {
+    payload.tipo = filters.tipo;
+  }
+  if (Array.isArray(filters.states) && filters.states.length > 0) {
+    payload.uf = filters.states;
+  }
+
+  return payload;
+}
+
+function getIntensityColor(investment, maxInvestment) {
+  const intensity = investment / maxInvestment;
+  if (intensity > 0.8) return "bg-red-600";
+  if (intensity > 0.6) return "bg-red-500";
+  if (intensity > 0.4) return "bg-orange-500";
+  if (intensity > 0.2) return "bg-yellow-500";
+  return "bg-green-500";
+}
 
 const BrazilHeatMap = () => {
+  const [ranking, setRanking] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
 
-  const stateData = [
-    { state: "SP", name: "São Paulo", investment: 89000000000, growth: 15.2, opportunities: 456 },
-    { state: "RJ", name: "Rio de Janeiro", investment: 52000000000, growth: 8.7, opportunities: 287 },
-    { state: "MG", name: "Minas Gerais", investment: 38000000000, growth: 12.1, opportunities: 198 },
-    { state: "BA", name: "Bahia", investment: 24000000000, growth: 18.3, opportunities: 134 },
-    { state: "PR", name: "Paraná", investment: 22000000000, growth: 9.4, opportunities: 156 },
-    { state: "RS", name: "Rio Grande do Sul", investment: 21000000000, growth: 6.8, opportunities: 142 },
-    { state: "PE", name: "Pernambuco", investment: 16000000000, growth: 22.1, opportunities: 98 },
-    { state: "CE", name: "Ceará", investment: 14000000000, growth: 16.7, opportunities: 87 },
-    { state: "PA", name: "Pará", investment: 12000000000, growth: 25.4, opportunities: 76 },
-    { state: "SC", name: "Santa Catarina", investment: 11000000000, growth: 11.3, opportunities: 89 },
-  ];
-
-  const getIntensityColor = (investment) => {
-    const maxInvestment = Math.max(...stateData.map((s) => s.investment));
-    const intensity = investment / maxInvestment;
-    if (intensity > 0.8) return "bg-red-600";
-    if (intensity > 0.6) return "bg-red-500";
-    if (intensity > 0.4) return "bg-orange-500";
-    if (intensity > 0.2) return "bg-yellow-500";
-    return "bg-green-500";
+  const filters = {
+    ascending: false,
+    period: { start: "", end: "" },
+    orderBy: "Ano",
   };
+
+  function agruparDados(dados) {
+    const agrupadoMap = new Map();
+    dados.forEach(({ UF, Função, "Total Investido": total, Ano }) => {
+      const key = `${UF}||${Função}`;
+      if (!agrupadoMap.has(key)) {
+        agrupadoMap.set(key, { UF, Função, "Total Investido": 0, Ano });
+      }
+      const grupo = agrupadoMap.get(key);
+      grupo["Total Investido"] += total;
+    });
+    return Array.from(agrupadoMap.values());
+  }
+
+  useEffect(() => {
+  async function loadRanking() {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await fetchData(filters);
+
+      console.log("Dados recebidos do backend (antes de agrupar):", data); 
+
+      const dataArray = Array.isArray(data) ? data : [data];
+      const dadosAgrupados = agruparDados(dataArray);
+      setRanking(dadosAgrupados);
+    } catch (err) {
+      setError(err.message || "Erro ao carregar ranking");
+    } finally {
+      setLoading(false);
+    }
+  }
+  loadRanking();
+}, []);
 
   const formatCurrency = (value) => {
     if (value >= 1_000_000_000) return `R$ ${(value / 1_000_000_000).toFixed(1)}bi`;
@@ -33,8 +113,13 @@ const BrazilHeatMap = () => {
     return `R$ ${value.toLocaleString("pt-BR")}`;
   };
 
+  const maxInvestment = ranking.length > 0 ? Math.max(...ranking.map((r) => r["Total Investido"])) : 1;
+
+  if (loading) return <p>Carregando ranking...</p>;
+  if (error) return <p className="text-red-600">Erro: {error}</p>;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-5xl mx-auto">
       {/* Mapa de Calor */}
       <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-lg p-4">
         <div className="flex items-center space-x-2 mb-4">
@@ -48,10 +133,13 @@ const BrazilHeatMap = () => {
             <h3 className="text-xl font-bold text-slate-800">
               Mapa Interativo do Brasil
             </h3>
-            <BrazilPlotlyHeatMap />
+            <BrazilPlotlyHeatMap
+              ranking={ranking}
+              onSelectState={(uf) => setSelectedState(uf)}
+              selectedState={selectedState}
+            />
           </div>
         </div>
-
         <div className="mt-6 flex items-center justify-center space-x-4">
           <span className="text-sm text-slate-600">Intensidade:</span>
           {[
@@ -70,49 +158,37 @@ const BrazilHeatMap = () => {
 
       {/* Ranking */}
       <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-lg p-4">
-        <h2 className="text-lg text-slate-800 font-semibold mb-4">Ranking por Estado</h2>
+        <h2 className="text-lg text-slate-800 font-semibold mb-4">Ranking por Estado e Função</h2>
         <div className="space-y-3">
-          {stateData.map((state, index) => (
-            <div
-              key={state.state}
-              className="flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-              onClick={() => setSelectedState(selectedState === state.state ? null : state.state)}
-            >
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg font-bold text-slate-600">#{index + 1}</span>
-                  <div className={`w-4 h-4 rounded ${getIntensityColor(state.investment)}`} />
+          {ranking.length === 0 && <p>Nenhum dado encontrado.</p>}
+          {ranking.map((item, index) => {
+            const cor = getIntensityColor(item["Total Investido"], maxInvestment);
+            return (
+              <div
+                key={`${item.UF}-${item.Função}-${index}`}
+                className={`flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer ${
+                  selectedState === item.UF ? "ring-2 ring-blue-500" : ""
+                }`}
+                onClick={() => setSelectedState(selectedState === item.UF ? null : item.UF)}
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-lg font-bold text-slate-600">#{index + 1}</span>
+                    <div className={`w-4 h-4 rounded ${cor}`} />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-slate-800">{item.UF}</h4>
+                    <p className="text-sm text-slate-600">{item.Função}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-slate-800">{state.name}</h4>
-                  <p className="text-sm text-slate-600">{state.opportunities} oportunidades ativas</p>
+                <div className="text-right">
+                  <div className="font-bold text-slate-800">{formatCurrency(item["Total Investido"] || 0)}</div>
+                  <div className="text-sm text-green-600">Ano: {item.Ano}</div>
                 </div>
               </div>
-              <div className="text-right">
-                <div className="font-bold text-slate-800">{formatCurrency(state.investment)}</div>
-                <div className="text-sm text-green-600">+{state.growth}%</div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-      </div>
-
-      {/* Destaques Regionais */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[
-          { title: "Região Líder", value: "Sudeste", extra: "62% do total", from: "blue-500", to: "blue-600" },
-          { title: "Maior Crescimento", value: "Nordeste", extra: "+19.2% média", from: "green-500", to: "green-600" },
-          { title: "Emergente", value: "Norte", extra: "+23.5% potencial", from: "purple-500", to: "purple-600" },
-        ].map((region) => (
-          <div
-            key={region.value}
-            className={`bg-gradient-to-r from-${region.from} to-${region.to} text-white rounded-lg p-4`}
-          >
-            <div className="text-sm opacity-90">{region.title}</div>
-            <div className="text-xl font-bold">{region.value}</div>
-            <div className="text-sm opacity-90">{region.extra}</div>
-          </div>
-        ))}
       </div>
     </div>
   );
