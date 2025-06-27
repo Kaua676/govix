@@ -36,7 +36,7 @@ ChartJS.register(
 );
 
 const InvestmentChart = () => {
-  const [chartType, setChartType] = useState("line");
+  const [chartType, setChartType] = useState("radar");
 
   const multiplier = 5;
 
