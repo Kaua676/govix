@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Bar, Pie, Radar } from "react-chartjs-2";
+import { Radar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -20,6 +19,7 @@ import {
   PieChart as PieChartIcon,
 } from "lucide-react";
 import BarChart from "./BarChart";
+import PieChart from "./PieChart";
 
 ChartJS.register(
   CategoryScale,
@@ -250,7 +250,7 @@ const InvestmentChart = () => {
   const renderChart = () => {
     if (chartType === "bar") return <BarChart />;
     if (chartType === "radar") return <Radar data={radarData} options={radarOptions} />;
-    return <Pie data={pieData} options={{ maintainAspectRatio: false }} />;
+    return <PieChart data={pieData} />;
   };
 
   return (
@@ -261,8 +261,8 @@ const InvestmentChart = () => {
           <div className="flex space-x-2">
             <button
               className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "radar"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-slate-700 border-slate-300"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-slate-700 border-slate-300"
                 }`}
               onClick={() => setChartType("radar")}
             >
@@ -271,8 +271,8 @@ const InvestmentChart = () => {
             </button>
             <button
               className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "pie"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-slate-700 border-slate-300"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-slate-700 border-slate-300"
                 }`}
               onClick={() => setChartType("pie")}
             >
@@ -281,8 +281,8 @@ const InvestmentChart = () => {
             </button>
             <button
               className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "bar"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-slate-700 border-slate-300"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-slate-700 border-slate-300"
                 }`}
               onClick={() => setChartType("bar")}
             >
