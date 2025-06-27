@@ -167,7 +167,7 @@ const InvestmentChart = () => {
     ],
   };
 
-  const options = {
+  const pieOptions = {
     maintainAspectRatio: false,
     plugins: {
       tooltip: {
@@ -248,9 +248,11 @@ const InvestmentChart = () => {
   };
 
   const renderChart = () => {
-    if (chartType === "bar") return <BarChart />;
-    if (chartType === "radar") return <Radar data={radarData} options={radarOptions} />;
-    return <Pie data={pieData} options={{ maintainAspectRatio: false }} />;
+    if (chartType === "pie") return <Pie data={pieData} options={pieOptions} />;
+    if (chartType === "radar") {
+      return <Radar data={radarData} options={radarOptions} />;
+    }
+    return <Bar data={barData} options={barOptions} />;
   };
 
   return (
