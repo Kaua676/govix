@@ -9,6 +9,7 @@ import {
     Legend,
     Title,
 } from "chart.js";
+import api from "../services/api";
 
 ChartJS.register(
     BarElement,
@@ -26,7 +27,6 @@ const ufLabelPlugin = {
         const {
             ctx,
             chartArea: { bottom },
-            chartArea,
         } = chart;
         const drawn = new Set();
 
@@ -54,31 +54,45 @@ const ufLabelPlugin = {
     },
 };
 
-const BarChart = () => {
+const BarChart = ({filters}) => {
     const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/filtro-mensal", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                ascending: "false",
-                data_fim: "2023-12",
-                data_inicio: "2023-01",
-                funcao: ["Educação", "Saúde"],
-                order_by: "Mês/Ano",
-                uf: ["MS", "MT", "SP", "RJ"],
-            }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
+        api.post("filtro-mensal", filters)
+            .then((response) => {
+                const data = response.data;
+
                 const meses = [...new Set(data.map((d) => d["Mês/Ano"]))];
                 const ufs = [...new Set(data.map((d) => d["UF"]))];
                 const funcoes = [...new Set(data.map((d) => d["Função"]))];
 
                 const corPorFuncao = {
-                    Educação: "rgba(54, 162, 235, 0.8)",
-                    Saúde: "rgba(255, 99, 132, 0.8)",
+                    Administração: "#2563eb",
+                    Agricultura: "#16a34a",
+                    "Assistência social": "#ec4899",
+                    "Ciência e Tecnologia": "#8b5cf6",
+                    Comunicações: "#0ea5e9",
+                    "Comércio e serviços": "#f97316",
+                    Cultura: "#e11d48",
+                    "Defesa nacional": "#7c3aed",
+                    "Desporto e lazer": "#22c55e",
+                    "Direitos da cidadania": "#f43f5e",
+                    Educação: "#3b82f6",
+                    "Encargos especiais": "#a855f7",
+                    Energia: "#facc15",
+                    "Gestão ambiental": "#10b981",
+                    Habitação: "#06b6d4",
+                    Indústria: "#f87171",
+                    Múltiplo: "#818cf8",
+                    "Organização agrária": "#65a30d",
+                    "Relações exteriores": "#4f46e5",
+                    Saneamento: "#2dd4bf",
+                    Saúde: "#ef4444",
+                    "Segurança pública": "#eab308",
+                    "Sem Informação": "#9ca3af",
+                    Trabalho: "#db2777",
+                    Transporte: "#fb923c",
+                    Urbanismo: "#3f6212",
                 };
 
                 const datasets = [];
@@ -98,7 +112,8 @@ const BarChart = () => {
                         datasets.push({
                             label: funcao,
                             data: valores,
-                            backgroundColor: corPorFuncao[funcao],
+                            backgroundColor:
+                                corPorFuncao[funcao] || "rgba(0,0,0,0.5)",
                             stack: uf,
                         });
                     });
@@ -112,7 +127,7 @@ const BarChart = () => {
             .catch((err) => {
                 console.error("Erro ao buscar dados:", err);
             });
-    }, []);
+    }, [filters]);
 
     const options = {
         responsive: true,
@@ -146,11 +161,30 @@ const BarChart = () => {
                                 }
                                 return false;
                             })
-                            .map((ds) => ({
-                                text: ds.label,
-                                fillStyle: ds.backgroundColor,
-                            }));
+                            .map((ds, i) => {
+                                return {
+                                    text: ds.label,
+                                    fillStyle: ds.backgroundColor,
+                                    hidden: chart.getDatasetMeta(i).hidden,
+                                    datasetIndex: i, // necessário para o toggle funcionar
+                                };
+                            });
                     },
+                },
+                onClick: function (e, legendItem, legend) {
+                    const chart = legend.chart;
+                    const label = legendItem.text;
+
+                    // Alterna a visibilidade de todos os datasets com a mesma label
+                    chart.data.datasets.forEach((ds, i) => {
+                        if (ds.label === label) {
+                            const meta = chart.getDatasetMeta(i);
+                            meta.hidden =
+                                meta.hidden === null ? true : !meta.hidden;
+                        }
+                    });
+
+                    chart.update();
                 },
             },
         },
@@ -160,7 +194,7 @@ const BarChart = () => {
         },
         layout: {
             padding: {
-                bottom: 40, // espaço suficiente para as UF rotacionadas
+                bottom: 45, // espaço suficiente para as UF rotacionadas
             },
         },
         scales: {
@@ -174,7 +208,6 @@ const BarChart = () => {
                     maxRotation: 0,
                     minRotation: 0,
                 },
-                // Aumenta o espaço abaixo do eixo X
                 grid: {
                     drawOnChartArea: false,
                 },
@@ -197,7 +230,14 @@ const BarChart = () => {
         },
     };
 
-    return <Bar data={chartData} options={options} plugins={[ufLabelPlugin]} />;
+    return (
+        <Bar
+            key={JSON.stringify(chartData?.labels)}
+            data={chartData}
+            options={options}
+            plugins={[ufLabelPlugin]}
+        />
+    );
 };
 
 export default BarChart;
