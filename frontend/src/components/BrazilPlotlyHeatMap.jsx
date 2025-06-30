@@ -1,44 +1,34 @@
 import { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
+import api from "../services/api";
 
-const BrazilPlotlyHeatMap = () => {
+const BrazilPlotlyHeatMap = ({filters}) => {
   const [plotData, setPlotData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const fetchMapData = async () => {
     setLoading(true);
-    try {
-      const response = await fetch("http://localhost:5000/api/mapa", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          data_inicio: "2020-01",
-          data_fim: "2025-12",
-          funcoes: ["Saúde"]
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Erro ao buscar mapa");
-      }
-
-      const jsonData = await response.json();
-      setPlotData(jsonData);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+      api.post("mapa", filters)
+        .then((response) => {
+          const data = response.data
+          setPlotData(data);
+        })
+        .catch((error) => {
+          setError(error.message);
+        })
+        .finally(() => {
+          setLoading(false);
+        })
   };
 
   useEffect(() => {
     fetchMapData();
-  }, []);
+  }, [filters]);
 
   if (loading) return <p>Carregando mapa...</p>;
   if (error) return <p>Erro: {error}</p>;
-  if (!plotData) return null;
+  if (!plotData) return <p>Nenhum mapa encontrado</p>;
 
   return (
     <div className="my-6">
