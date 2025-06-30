@@ -6,7 +6,6 @@ import BrazilHeatMap from "../components/BrazilHeatMap";
 import RecommendationsPanel from "../components/RecommendationsPanel";
 import MetricsCards from "../components/MetricsCards";
 
-
 const Index = () => {
   const [filters, setFilters] = useState({
     ascending: "true",
@@ -18,11 +17,11 @@ const Index = () => {
     order_by: "",
     programa: [],
     tipo: [],
-    uf: []
+    uf: [],
   });
 
   useEffect(() => {
-    localStorage.setItem("filtros", JSON.stringify(filters))
+    localStorage.setItem("filtros", JSON.stringify(filters));
   }, [filters]);
 
   const [activeTab, setActiveTab] = useState("analytics");
@@ -51,7 +50,7 @@ const Index = () => {
 
       {/* Conteúdo */}
       <div className="container mx-auto px-6 py-8 space-y-8">
-        <MetricsCards />
+        <MetricsCards filters={filters} />
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1">
             <FilterPanel filters={filters} onFiltersChange={setFilters} />
@@ -64,22 +63,26 @@ const Index = () => {
                 onClick={() => setActiveTab("analytics")}
                 className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md border 
                   ${
-                  activeTab === "analytics"
-                    ? "bg-indigo-600 text-white"
-                    : "bg-white border-slate-300 text-slate-700"
-                }`}
+                    activeTab === "analytics"
+                      ? "bg-indigo-600 text-white"
+                      : "bg-white border-slate-300 text-slate-700"
+                  }`}
               >
-                <BarChart filtros={filters} setFiltros={setFilters} className="w-4 h-4" />
+                <BarChart
+                  filtros={filters}
+                  setFiltros={setFilters}
+                  className="w-4 h-4"
+                />
                 <span>Analytics</span>
               </button>
               <button
                 onClick={() => setActiveTab("map")}
                 className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md border 
                   ${
-                  activeTab === "map"
-                    ? "bg-indigo-600 text-white"
-                    : "bg-white border-slate-300 text-slate-700"
-                }`}
+                    activeTab === "map"
+                      ? "bg-indigo-600 text-white"
+                      : "bg-white border-slate-300 text-slate-700"
+                  }`}
               >
                 <MapPin className="w-4 h-4" />
                 <span>Mapa de Calor</span>
@@ -88,10 +91,10 @@ const Index = () => {
                 onClick={() => setActiveTab("recommendations")}
                 className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md border 
                   ${
-                  activeTab === "recommendations"
-                    ? "bg-indigo-600 text-white"
-                    : "bg-white border-slate-300 text-slate-700"
-                }`}
+                    activeTab === "recommendations"
+                      ? "bg-indigo-600 text-white"
+                      : "bg-white border-slate-300 text-slate-700"
+                  }`}
               >
                 <Target className="w-4 h-4" />
                 <span>Recomendações</span>
