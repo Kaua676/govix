@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { TrendingUp, MapPin, Target, BarChart } from "lucide-react";
+import { useState, useEffect } from "react";
+import { BarChart, MapPin, Target, TrendingUp } from "lucide-react";
 import FilterPanel from "../components/FilterPanel";
 import InvestmentChart from "../components/InvestmentChart";
 import BrazilHeatMap from "../components/BrazilHeatMap";
@@ -9,10 +9,21 @@ import MetricsCards from "../components/MetricsCards";
 
 const Index = () => {
   const [filters, setFilters] = useState({
-    period: { start: "", end: "" },
-    categories: [],
-    states: [],
+    ascending: "true",
+    data_fim: "2018-12",
+    data_inicio: "2018-01",
+    favorecido: [],
+    funcao: [],
+    group: [],
+    order_by: "",
+    programa: [],
+    tipo: [],
+    uf: []
   });
+
+  useEffect(() => {
+    localStorage.setItem("filtros", JSON.stringify(filters))
+  }, [filters]);
 
   const [activeTab, setActiveTab] = useState("analytics");
 
@@ -53,22 +64,22 @@ const Index = () => {
                 onClick={() => setActiveTab("analytics")}
                 className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md border 
                   ${
-                    activeTab === "analytics"
-                      ? "bg-indigo-600 text-white"
-                      : "bg-white border-slate-300 text-slate-700"
-                  }`}
+                  activeTab === "analytics"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-white border-slate-300 text-slate-700"
+                }`}
               >
-                <BarChart className="w-4 h-4" />
+                <BarChart filtros={filters} setFiltros={setFilters} className="w-4 h-4" />
                 <span>Analytics</span>
               </button>
               <button
                 onClick={() => setActiveTab("map")}
                 className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md border 
                   ${
-                    activeTab === "map"
-                      ? "bg-indigo-600 text-white"
-                      : "bg-white border-slate-300 text-slate-700"
-                  }`}
+                  activeTab === "map"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-white border-slate-300 text-slate-700"
+                }`}
               >
                 <MapPin className="w-4 h-4" />
                 <span>Mapa de Calor</span>
@@ -77,21 +88,21 @@ const Index = () => {
                 onClick={() => setActiveTab("recommendations")}
                 className={`flex items-center justify-center gap-2 py-2 px-4 rounded-md border 
                   ${
-                    activeTab === "recommendations"
-                      ? "bg-indigo-600 text-white"
-                      : "bg-white border-slate-300 text-slate-700"
-                  }`}
+                  activeTab === "recommendations"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-white border-slate-300 text-slate-700"
+                }`}
               >
                 <Target className="w-4 h-4" />
                 <span>Recomendações</span>
               </button>
             </div>
 
-            
-
             {/* Conteúdo da Tab */}
             <div className="space-y-6">
-              {activeTab === "analytics" && <InvestmentChart filters={filters}/>}
+              {activeTab === "analytics" && (
+                <InvestmentChart filters={filters} />
+              )}
               {activeTab === "map" && <BrazilHeatMap filters={filters} />}
               {activeTab === "recommendations" && (
                 <RecommendationsPanel filters={filters} />
