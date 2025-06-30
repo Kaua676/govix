@@ -1,111 +1,77 @@
 import { useEffect, useState } from "react";
-import BrazilPlotlyHeatMap from "./BrazilPlotlyHeatMap.jsx"; 
-
-async function fetchData(rawPayload) {
-  const payload = normalizePayload(rawPayload);
-  try {
-    console.log("[fetchData] payload:", payload);
-    const response = await fetch("http://localhost:5000/api/filtro_anual", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Erro na requisição ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Erro no fetchData:", error.message);
-    throw error;
-  }
-}
+import api from "../services/api"; // axios configurado
+import BrazilPlotlyHeatMap from "./BrazilPlotlyHeatMap.jsx";
 
 function normalizePayload(filters) {
   const payload = {
     ascending: filters.ascending ?? false,
-    data_fim: filters.period?.end || "2024-12",
-    data_inicio: filters.period?.start || "2020-01",
-    order_by: filters.orderBy || "Ano",
+    data_fim: filters.data_fim || "2024-12",
+    data_inicio: filters.data_inicio || "2020-01",
+    order_by: filters.order_by || "Ano",
   };
 
-  if (Array.isArray(filters.favorecido) && filters.favorecido.length > 0) {
+  if (Array.isArray(filters.favorecido) && filters.favorecido.length > 0)
     payload.favorecido = filters.favorecido;
-  }
-  if (Array.isArray(filters.categories) && filters.categories.length > 0) {
-    payload.funcao = filters.categories;
-  }
-  if (Array.isArray(filters.groupBy) && filters.groupBy.length > 0) {
-    payload.group = filters.groupBy;
-  }
-  if (Array.isArray(filters.programa) && filters.programa.length > 0) {
+  if (Array.isArray(filters.funcao) && filters.funcao.length > 0)
+    payload.funcao = filters.funcao;
+  if (Array.isArray(filters.group) && filters.group.length > 0)
+    payload.group = filters.group;
+  if (Array.isArray(filters.programa) && filters.programa.length > 0)
     payload.programa = filters.programa;
-  }
-  if (Array.isArray(filters.tipo) && filters.tipo.length > 0) {
+  if (Array.isArray(filters.tipo) && filters.tipo.length > 0)
     payload.tipo = filters.tipo;
-  }
-  if (Array.isArray(filters.states) && filters.states.length > 0) {
-    payload.uf = filters.states;
-  }
+  if (Array.isArray(filters.uf) && filters.uf.length > 0)
+    payload.uf = filters.uf;
 
   return payload;
 }
 
-function getIntensityColor(investment, maxInvestment) {
-  const intensity = investment / maxInvestment;
-  if (intensity > 0.8) return "bg-red-600";
-  if (intensity > 0.6) return "bg-red-500";
-  if (intensity > 0.4) return "bg-orange-500";
-  if (intensity > 0.2) return "bg-yellow-500";
-  return "bg-green-500";
-}
-
-const BrazilHeatMap = () => {
+const BrazilHeatMap = ({ filters }) => {
   const [ranking, setRanking] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
 
-  const filters = {
-    ascending: false,
-    period: { start: "", end: "" },
-    orderBy: "Ano",
-  };
-
-  function agruparDados(dados) {
+  const agruparDados = (dados) => {
     const agrupadoMap = new Map();
     dados.forEach(({ UF, Função, "Total Investido": total, Ano }) => {
       const key = `${UF}||${Função}`;
       if (!agrupadoMap.has(key)) {
         agrupadoMap.set(key, { UF, Função, "Total Investido": 0, Ano });
       }
-      const grupo = agrupadoMap.get(key);
-      grupo["Total Investido"] += total;
+      agrupadoMap.get(key)["Total Investido"] += total;
     });
     return Array.from(agrupadoMap.values());
-  }
+  };
 
   useEffect(() => {
-  async function loadRanking() {
     setLoading(true);
     setError(null);
-    try {
-      const data = await fetchData(filters);
 
-      console.log("Dados recebidos do backend (antes de agrupar):", data); 
+    const payload = normalizePayload(filters);
 
-      const dataArray = Array.isArray(data) ? data : [data];
-      const dadosAgrupados = agruparDados(dataArray);
-      setRanking(dadosAgrupados);
-    } catch (err) {
-      setError(err.message || "Erro ao carregar ranking");
-    } finally {
-      setLoading(false);
-    }
-  }
-  loadRanking();
-}, []);
+    api.post("/filtro-anual", payload)
+      .then((response) => {
+        const data = response.data;
+        const dataArray = Array.isArray(data) ? data : [data];
+        const dadosAgrupados = agruparDados(dataArray);
+        setRanking(dadosAgrupados);
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar ranking:", err);
+        setError("Erro ao buscar ranking");
+      })
+      .finally(() => setLoading(false));
+  }, [filters]);
+
+  const getIntensityColor = (investment, maxInvestment) => {
+    const intensity = investment / maxInvestment;
+    if (intensity > 0.8) return "bg-red-600";
+    if (intensity > 0.6) return "bg-red-500";
+    if (intensity > 0.4) return "bg-orange-500";
+    if (intensity > 0.2) return "bg-yellow-500";
+    return "bg-green-500";
+  };
 
   const formatCurrency = (value) => {
     if (value >= 1_000_000_000) return `R$ ${(value / 1_000_000_000).toFixed(1)}bi`;
@@ -113,14 +79,16 @@ const BrazilHeatMap = () => {
     return `R$ ${value.toLocaleString("pt-BR")}`;
   };
 
-  const maxInvestment = ranking.length > 0 ? Math.max(...ranking.map((r) => r["Total Investido"])) : 1;
+  const maxInvestment = ranking.length > 0
+    ? Math.max(...ranking.map((r) => r["Total Investido"]))
+    : 1;
 
-  if (loading) return <p>Carregando ranking...</p>;
+  if (loading) return <p>Carregando...</p>;
   if (error) return <p className="text-red-600">Erro: {error}</p>;
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
-      {/* Mapa de Calor */}
+    <div className="space-y-6">
+      {/* Mapa */}
       <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-lg p-4">
         <div className="flex items-center space-x-2 mb-4">
           <div className="w-5 h-5 bg-blue-600 rounded-full" />
@@ -128,11 +96,10 @@ const BrazilHeatMap = () => {
             Mapa de Calor - Investimentos por Estado
           </h2>
         </div>
+
         <div className="relative bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg p-8 min-h-96 flex items-center justify-center">
           <div className="text-center space-y-4 w-full">
-            <h3 className="text-xl font-bold text-slate-800">
-              Mapa Interativo do Brasil
-            </h3>
+            <h3 className="text-xl font-bold text-slate-800">Mapa Interativo do Brasil</h3>
             <BrazilPlotlyHeatMap
               ranking={ranking}
               onSelectState={(uf) => setSelectedState(uf)}
@@ -140,6 +107,7 @@ const BrazilHeatMap = () => {
             />
           </div>
         </div>
+
         <div className="mt-6 flex items-center justify-center space-x-4">
           <span className="text-sm text-slate-600">Intensidade:</span>
           {[
@@ -158,7 +126,9 @@ const BrazilHeatMap = () => {
 
       {/* Ranking */}
       <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-lg p-4">
-        <h2 className="text-lg text-slate-800 font-semibold mb-4">Ranking por Estado e Função</h2>
+        <h2 className="text-lg text-slate-800 font-semibold mb-4">
+          Ranking por Estado e Função
+        </h2>
         <div className="space-y-3">
           {ranking.length === 0 && <p>Nenhum dado encontrado.</p>}
           {ranking.map((item, index) => {
@@ -182,7 +152,9 @@ const BrazilHeatMap = () => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-bold text-slate-800">{formatCurrency(item["Total Investido"] || 0)}</div>
+                  <div className="font-bold text-slate-800">
+                    {formatCurrency(item["Total Investido"] || 0)}
+                  </div>
                   <div className="text-sm text-green-600">Ano: {item.Ano}</div>
                 </div>
               </div>

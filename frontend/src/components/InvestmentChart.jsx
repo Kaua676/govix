@@ -35,8 +35,8 @@ ChartJS.register(
   BarController
 );
 
-const InvestmentChart = () => {
-  const [chartType, setChartType] = useState("radar");
+const InvestmentChart = ({filters}) => {
+  const [chartType, setChartType] = useState("line");
 
   const multiplier = 5;
 
