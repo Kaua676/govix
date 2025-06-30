@@ -3,7 +3,7 @@ import pandas as pd
 
 pd.options.display.float_format = '{:,.2f}'.format
 
-def filtrar_dataframe(df, params):
+def filtrar_dataframe(df, params, ranking=False):
 
     filtros = []
 
@@ -36,7 +36,7 @@ def filtrar_dataframe(df, params):
 
     ascending = json.loads(params.get("ascending").lower()) if params.get("ascending") else False
 
-    group = ["Ano", "UF", "Função"]
+    group = ["UF", "Função"] if ranking else ["Ano", "UF", "Função"]
     if group_by := params.get("group"):
         for g in group_by:
             group.append(g)
