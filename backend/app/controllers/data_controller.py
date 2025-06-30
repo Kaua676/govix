@@ -279,62 +279,7 @@ def filtrar_dados():
 
     params = request.json
 
-    filtros = []
-
-    # Filtro por data
-    if params.get("data_inicio"):
-        data_inicio = pd.to_datetime(params["data_inicio"], format="%Y-%m")
-        filtros.append(df["Data"] >= data_inicio)
-
-    if params.get("data_fim"):
-        data_fim = pd.to_datetime(params["data_fim"], format="%Y-%m")
-        filtros.append(df["Data"] <= data_fim)
-
-    # UF (OR entre múltiplas UFs)
-    if ufs := params.get("uf"):
-        filtros.append(df["UF"].isin(ufs))
-
-    if tipos := params.get("tipo"):
-        filtros.append(df["Tipo"].isin(tipos))
-
-    if funcoes := params.get("funcao"):
-        filtros.append(df["Função"].isin(funcoes))
-
-    if programa := params.get("programa"):
-        filtros.append(df["Programa Orçamentário"].isin(programa))
-
-    if favorecido := params.get("favorecido"):
-        filtros.append(df["Tipo de Favorecido"].isin(favorecido))
-    
-    order = params.get("order_by") if params.get("order_by") else "Total Investido"
-
-    ascending = json.loads(params.get("ascending").lower()) if params.get("ascending") else False
-
-    group = ["Ano", "UF", "Função"]
-    if group_by := params.get("group"):
-        for g in group_by:
-            group.append(g)
-
-    # Combina os filtros com AND
-    if filtros:
-        filtro_final = filtros[0]
-        for f in filtros[1:]:
-            filtro_final &= f
-        df_filtrado = df[filtro_final]
-    else:
-        df_filtrado = df.copy()
-
-    # Exemplo de agrupamento final
-    df_filtrado["Ano"] = df_filtrado["Data"].dt.year
-    resultado = (
-        df_filtrado
-        .groupby(group)["Valor Transferido"]
-        .sum()
-        .reset_index()
-        .rename(columns={"Valor Transferido": "Total Investido"})
-        .sort_values(by=order, ascending=ascending)
-    )
-
+    resultado = filtrar_dataframe(df, params)
     return resultado.to_json(orient="records", force_ascii=False)
 
 @data_bp.route("/mapa", methods=["POST"])
@@ -382,13 +327,12 @@ def mapa_funcao_ano():
 
   params = request.json
 
-  if not params.get("data_inicio") or not params.get("data_fim") or not params.get("funcoes"):
-    return jsonify({"erro": "Parâmetros 'data_inicio', 'data_fim' e 'funcoes' são obrigatórios."}), 400
+  if not params.get("data_inicio") or not params.get("data_fim"):
+    return jsonify({"erro": "Parâmetros 'data_inicio', 'data_fim' são obrigatórios."}), 400
 
-# Agora pode converter com segurança
   data_inicio = pd.to_datetime(params["data_inicio"], format="%Y-%m")
   data_fim = pd.to_datetime(params["data_fim"], format="%Y-%m")
-  funcoes = params.get("funcoes")
+  funcoes = params.get("funcao")
   
   map_params = {
     "data_inicio": data_inicio,
@@ -412,6 +356,9 @@ def mapa_funcao_ano():
             aggfunc="sum",
             fill_value=0
         ).reset_index()
+  
+  if funcoes == []:
+    funcoes = sorted(df_filtrado["Função"].dropna().unique())
           
   # Adicionar coluna com total geral
   resultado_pivot["Total Investido"] = resultado_pivot[funcoes].sum(axis=1)
@@ -463,7 +410,11 @@ def mapa_funcao_ano():
       ]
   )
   
-  fig.data[0].text = resultado_pivot["text"]
+  ano_inicial = resultado_pivot["Ano"].min()
+  df_inicial = resultado_pivot[resultado_pivot["Ano"] == ano_inicial].reset_index(drop=True)
+  fig.data[0].text = df_inicial["text"]
+  fig.data[0].hovertemplate = "%{text}<extra></extra>"
+  
   fig.update_traces(hovertemplate="%{text}<extra></extra>")
   
   for frame in fig.frames:
@@ -487,7 +438,7 @@ def mapa_funcao_ano():
       margin={"r":0, "t":40, "l":0, "b":0}
   )
   
-  fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2000
+  # fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2000
 
   # fig.show()
 
