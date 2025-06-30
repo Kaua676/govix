@@ -2,30 +2,6 @@ import { useEffect, useState } from "react";
 import api from "../services/api"; // axios configurado
 import BrazilPlotlyHeatMap from "./BrazilPlotlyHeatMap.jsx";
 
-function normalizePayload(filters) {
-  const payload = {
-    ascending: filters.ascending ?? false,
-    data_fim: filters.data_fim || "2024-12",
-    data_inicio: filters.data_inicio || "2020-01",
-    order_by: filters.order_by || "Ano",
-  };
-
-  if (Array.isArray(filters.favorecido) && filters.favorecido.length > 0)
-    payload.favorecido = filters.favorecido;
-  if (Array.isArray(filters.funcao) && filters.funcao.length > 0)
-    payload.funcao = filters.funcao;
-  if (Array.isArray(filters.group) && filters.group.length > 0)
-    payload.group = filters.group;
-  if (Array.isArray(filters.programa) && filters.programa.length > 0)
-    payload.programa = filters.programa;
-  if (Array.isArray(filters.tipo) && filters.tipo.length > 0)
-    payload.tipo = filters.tipo;
-  if (Array.isArray(filters.uf) && filters.uf.length > 0)
-    payload.uf = filters.uf;
-
-  return payload;
-}
-
 const BrazilHeatMap = ({ filters }) => {
   const [ranking, setRanking] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -48,9 +24,7 @@ const BrazilHeatMap = ({ filters }) => {
     setLoading(true);
     setError(null);
 
-    const payload = normalizePayload(filters);
-
-    api.post("/filtro-anual", payload)
+    api.post("/filtro-anual", filters)
       .then((response) => {
         const data = response.data;
         const dataArray = Array.isArray(data) ? data : [data];
@@ -101,9 +75,10 @@ const BrazilHeatMap = ({ filters }) => {
           <div className="text-center space-y-4 w-full">
             <h3 className="text-xl font-bold text-slate-800">Mapa Interativo do Brasil</h3>
             <BrazilPlotlyHeatMap
-              ranking={ranking}
-              onSelectState={(uf) => setSelectedState(uf)}
-              selectedState={selectedState}
+              filters={filters}
+              // ranking={ranking}
+              // onSelectState={(uf) => setSelectedState(uf)}
+              // selectedState={selectedState}
             />
           </div>
         </div>

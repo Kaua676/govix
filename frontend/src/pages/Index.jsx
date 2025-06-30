@@ -8,10 +8,12 @@ import MetricsCards from "../components/MetricsCards";
 
 
 const Index = () => {
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState(() => {
+  const stored = localStorage.getItem("filtros");
+  return stored ? JSON.parse(stored) : {
     ascending: "true",
-    data_fim: "2024-12",
-    data_inicio: "2024-01",
+    data_fim: "2025-12",
+    data_inicio: "2025-01",
     favorecido: [],
     funcao: [],
     group: [],
@@ -19,7 +21,9 @@ const Index = () => {
     programa: [],
     tipo: [],
     uf: []
-  });
+  };
+});
+
 
   useEffect(() => {
     localStorage.setItem("filtros", JSON.stringify(filters))
