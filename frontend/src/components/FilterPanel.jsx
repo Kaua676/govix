@@ -3,113 +3,34 @@ import { useState } from "react";
 const FilterPanel = ({ filters, onFiltersChange }) => {
   // Lista de categorias com nome e cor
   const categories = [
-    {
-      id: "Administração",
-      label: "Administração",
-      color: "bg-slate-100 text-slate-800",
-    },
-    {
-      id: "Agricultura",
-      label: "Agricultura",
-      color: "bg-green-100 text-green-800",
-    },
-    {
-      id: "Assistência social",
-      label: "Assistência social",
-      color: "bg-pink-100 text-pink-800",
-    },
-    {
-      id: "Ciência e Tecnologia",
-      label: "Ciência e Tecnologia",
-      color: "bg-purple-100 text-purple-800",
-    },
-    {
-      id: "Comunicações",
-      label: "Comunicações",
-      color: "bg-blue-100 text-blue-800",
-    },
-    {
-      id: "Comércio e serviços",
-      label: "Comércio e serviços",
-      color: "bg-yellow-100 text-yellow-800",
-    },
-    { id: "Cultura", label: "Cultura", color: "bg-rose-100 text-rose-800" },
-    {
-      id: "Defesa nacional",
-      label: "Defesa nacional",
-      color: "bg-red-100 text-red-800",
-    },
-    {
-      id: "Desporto e lazer",
-      label: "Desporto e lazer",
-      color: "bg-orange-100 text-orange-800",
-    },
-    {
-      id: "Direitos da cidadania",
-      label: "Direitos da cidadania",
-      color: "bg-emerald-100 text-emerald-800",
-    },
-    { id: "Educação", label: "Educação", color: "bg-cyan-100 text-cyan-800" },
-    {
-      id: "Encargos especiais",
-      label: "Encargos especiais",
-      color: "bg-gray-100 text-gray-800",
-    },
-    { id: "Energia", label: "Energia", color: "bg-yellow-200 text-yellow-900" },
-    {
-      id: "Gestão ambiental",
-      label: "Gestão ambiental",
-      color: "bg-green-200 text-green-900",
-    },
-    { id: "Habitação", label: "Habitação", color: "bg-blue-200 text-blue-900" },
-    {
-      id: "Indústria",
-      label: "Indústria",
-      color: "bg-indigo-100 text-indigo-800",
-    },
-    {
-      id: "Múltiplo",
-      label: "Múltiplo",
-      color: "bg-fuchsia-100 text-fuchsia-800",
-    },
-    {
-      id: "Organização agrária",
-      label: "Organização agrária",
-      color: "bg-lime-100 text-lime-800",
-    },
-    {
-      id: "Relações exteriores",
-      label: "Relações exteriores",
-      color: "bg-teal-100 text-teal-800",
-    },
-    { id: "Saneamento", label: "Saneamento", color: "bg-sky-100 text-sky-800" },
-    { id: "Saúde", label: "Saúde", color: "bg-red-200 text-red-900" },
-    {
-      id: "Segurança pública",
-      label: "Segurança pública",
-      color: "bg-yellow-300 text-yellow-900",
-    },
-    {
-      id: "Sem Informação",
-      label: "Sem Informação",
-      color: "bg-zinc-100 text-zinc-800",
-    },
-    {
-      id: "Trabalho",
-      label: "Trabalho",
-      color: "bg-orange-200 text-orange-900",
-    },
-    {
-      id: "Transporte",
-      label: "Transporte",
-      color: "bg-indigo-200 text-indigo-900",
-    },
-    {
-      id: "Urbanismo",
-      label: "Urbanismo",
-      color: "bg-amber-100 text-amber-800",
-    },
+    { id: "Administração", label: "Administração", color: "bg-[#2563eb] text-white" },
+    { id: "Agricultura", label: "Agricultura", color: "bg-[#16a34a] text-white" },
+    { id: "Assistência social", label: "Assistência social", color: "bg-[#ec4899] text-white" },
+    { id: "Ciência e Tecnologia", label: "Ciência e Tecnologia", color: "bg-[#8b5cf6] text-white" },
+    { id: "Comunicações", label: "Comunicações", color: "bg-[#0ea5e9] text-white" },
+    { id: "Comércio e serviços", label: "Comércio e serviços", color: "bg-[#f97316] text-white" },
+    { id: "Cultura", label: "Cultura", color: "bg-[#e11d48] text-white" },
+    { id: "Defesa nacional", label: "Defesa nacional", color: "bg-[#7c3aed] text-white" },
+    { id: "Desporto e lazer", label: "Desporto e lazer", color: "bg-[#22c55e] text-white" },
+    { id: "Direitos da cidadania", label: "Direitos da cidadania", color: "bg-[#f43f5e] text-white" },
+    { id: "Educação", label: "Educação", color: "bg-[#3b82f6] text-white" },
+    { id: "Encargos especiais", label: "Encargos especiais", color: "bg-[#a855f7] text-white" },
+    { id: "Energia", label: "Energia", color: "bg-[#facc15] text-black" },
+    { id: "Gestão ambiental", label: "Gestão ambiental", color: "bg-[#10b981] text-white" },
+    { id: "Habitação", label: "Habitação", color: "bg-[#06b6d4] text-white" },
+    { id: "Indústria", label: "Indústria", color: "bg-[#f87171] text-black" },
+    { id: "Múltiplo", label: "Múltiplo", color: "bg-[#818cf8] text-white" },
+    { id: "Organização agrária", label: "Organização agrária", color: "bg-[#65a30d] text-white" },
+    { id: "Relações exteriores", label: "Relações exteriores", color: "bg-[#4f46e5] text-white" },
+    { id: "Saneamento", label: "Saneamento", color: "bg-[#2dd4bf] text-black" },
+    { id: "Saúde", label: "Saúde", color: "bg-[#ef4444] text-white" },
+    { id: "Segurança pública", label: "Segurança pública", color: "bg-[#eab308] text-black" },
+    { id: "Sem Informação", label: "Sem Informação", color: "bg-[#9ca3af] text-black" },
+    { id: "Trabalho", label: "Trabalho", color: "bg-[#db2777] text-white" },
+    { id: "Transporte", label: "Transporte", color: "bg-[#fb923c] text-black" },
+    { id: "Urbanismo", label: "Urbanismo", color: "bg-[#3f6212] text-white" },
   ];
+
 
   // Lista de todos os estados do Brasil
   const states = [
