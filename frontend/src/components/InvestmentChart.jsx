@@ -35,7 +35,7 @@ ChartJS.register(
   BarController
 );
 
-const InvestmentChart = ({filters}) => {
+const InvestmentChart = ({ filters }) => {
   const [chartType, setChartType] = useState("line");
 
   const multiplier = 5;
@@ -248,9 +248,9 @@ const InvestmentChart = ({filters}) => {
   };
 
   const renderChart = () => {
-    if (chartType === "bar") return <BarChart filters={filters}/>;
+    if (chartType === "bar") return <BarChart filters={filters} />;
     if (chartType === "radar") return <Radar data={radarData} options={radarOptions} />;
-    return <PieChart data={pieData} />;
+    return <PieChart filters={filters} />;
   };
 
   return (

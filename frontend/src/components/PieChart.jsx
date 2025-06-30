@@ -6,10 +6,11 @@ import {
     Tooltip,
     Legend,
 } from "chart.js";
+import api from "../services/api";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PieChart = () => {
+const PieChart = ({ filters }) => {
     const [pieData, setPieData] = useState({
         labels: [],
         datasets: [{ data: [], backgroundColor: [] }],
@@ -41,23 +42,16 @@ const PieChart = () => {
         "Sem Informação": "#9ca3af",
         Trabalho: "#db2777",
         Transporte: "#fb923c",
-        Urbanismo: "#3f6212"
+        Urbanismo: "#3f6212",
     };
+
     useEffect(() => {
-        fetch("http://localhost:5000/api/filtro-anual", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                data_inicio: "2023-01",
-                data_fim: "2023-12",
-                funcao: ['Administração', 'Agricultura', 'Assistência social', 'Ciência e Tecnologia', 'Comunicações', 'Comércio e serviços', 'Cultura', 'Defesa nacional', 'Desporto e lazer', 'Direitos da cidadania', 'Educação', 'Encargos especiais', 'Energia', 'Gestão ambiental', 'Habitação', 'Indústria', 'Múltiplo', 'Organização agrária', 'Relações exteriores', 'Saneamento', 'Saúde', 'Segurança pública', 'Sem Informação', 'Trabalho', 'Transporte', 'Urbanismo'],
-                order_by: "Ano",
-                uf: ["MS"],
-            }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log("Dados recebidos:", data);
+        if (!filters?.data_inicio || !filters?.data_fim) return;
+
+        api.post("filtro-anual", filters)
+            .then((response) => {
+                const data = response.data;
+                console.log(data)
                 const totaisPorFuncao = {};
 
                 data.forEach((item) => {
@@ -88,9 +82,7 @@ const PieChart = () => {
             .catch((error) => {
                 console.error("Erro ao buscar dados do PieChart:", error);
             });
-    }, []);
-
-    console.log(pieData)
+    }, [filters]);
 
     const options = {
         maintainAspectRatio: false,
@@ -114,7 +106,6 @@ const PieChart = () => {
             <Pie data={pieData} options={options} />
         </div>
     );
-
 };
 
 export default PieChart;
