@@ -162,14 +162,52 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
 
   const orderByOptions = ["Ano", "UF"];
   const groupByOptions = ["Tipo de Favorecido", "Programa Orçamentário"];
-  const [localPeriodStart, setLocalPeriodStart] = useState(filters.period.start || "");
-  const [localPeriodEnd, setLocalPeriodEnd] = useState(filters.period.end || "");
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedStates, setSelectedStates] = useState([]);
-  const [selectedTipo, setSelectedTipo] = useState("");
-  const [selectedFavorecido, setSelectedFavorecido] = useState("");
-  const [selectedOrderBy, setSelectedOrderBy] = useState("");
-  const [selectedGroupBy, setSelectedGroupBy] = useState("");
+  const [localPeriodStart, setLocalPeriodStart] = useState(
+    filters.data_inicio || "",
+  );
+  const [localPeriodEnd, setLocalPeriodEnd] = useState(
+    filters.data_fim || "",
+  );
+  const [selectedCategories, setSelectedCategories] = useState(
+    filters.funcao || [],
+  );
+  const [selectedStates, setSelectedStates] = useState(filters.uf || []);
+  const [selectedTipo, setSelectedTipo] = useState(filters.tipo || "");
+  const [selectedFavorecido, setSelectedFavorecido] = useState(
+    filters.favorecido || "",
+  );
+  const [selectedOrderBy, setSelectedOrderBy] = useState(filters.order || "");
+  const [selectedGroupBy, setSelectedGroupBy] = useState(filters.group || "");
+  const regex = /^\d{4}-(0[1-9]|1[0-2])$/;
+
+  const handleClick = () => {
+    if (handleChangeDataFim(localPeriodEnd) !== true) {
+      alert("Data fim inválida!\nModelo: YYYY-MM");
+      return;
+    }
+    if (handleChangeDataInicio(localPeriodStart) !== true) {
+      alert("Data início inválida\nModelo: YYYY-MM");
+      return;
+    }
+    handleApplyFilters();
+  };
+
+  const handleChangeDataFim = (value) => {
+    if (regex.test(value)) {
+      setLocalPeriodEnd(value);
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const handleChangeDataInicio = (value) => {
+    if (regex.test(value)) {
+      setLocalPeriodStart(value);
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   function handleCategoryChange(id, isChecked) {
     const updated = isChecked
@@ -204,8 +242,8 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
   }
 
   function clearFilters() {
-    setLocalPeriodStart("");
-    setLocalPeriodEnd("");
+    setLocalPeriodStart("2018-01");
+    setLocalPeriodEnd("2018-12");
     setSelectedCategories([]);
     setSelectedStates([""]);
     setSelectedTipo("");
@@ -213,30 +251,33 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
     setSelectedOrderBy("");
     setSelectedGroupBy("");
     onFiltersChange({
-      period: { start: "", end: "" },
-      categories: [],
-      states: [""],
-      tipo: "",
+      ascending: "true",
+      data_fim: "2018-12",
+      data_inicio: "2018-01",
       favorecido: [],
-      orderBy: "",
-      groupBy: "",
+      funcao: [],
+      group: [],
+      order_by: "",
+      programa: [],
+      tipo: [],
+      uf: [],
     });
   }
 
   function handleApplyFilters() {
-  onFiltersChange({
-    period: {
-      start: localPeriodStart === "" ? "0000-00" : localPeriodStart,
-      end: localPeriodEnd === "" ? "0000-00" : localPeriodEnd,
-    },
-    categories: selectedCategories,
-    states: selectedStates,
-    tipo: selectedTipo,
-    favorecido: selectedFavorecido,
-    orderBy: selectedOrderBy,
-    groupBy: selectedGroupBy,
-  });
-}
+    onFiltersChange({
+      ascending: "true",
+      data_fim: localPeriodEnd,
+      data_inicio: localPeriodStart,
+      favorecido: selectedFavorecido,
+      funcao: selectedCategories,
+      group: selectedGroupBy,
+      order_by: selectedOrderBy,
+      programa: [],
+      tipo: selectedTipo,
+      uf: selectedStates,
+    });
+  }
   return (
     <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-lg sticky top-32 p-4 space-y-6">
       {/* Cabeçalho */}
@@ -266,12 +307,8 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
               id="period-start"
               type="text"
               placeholder="AAAA-MM"
-              value={
-                localPeriodStart === "0000-00" ? "" : localPeriodStart
-              }
-              onChange={(e) =>
-                setLocalPeriodStart(e.target.value)
-              }
+              value={localPeriodStart === "0000-00" ? "" : localPeriodStart}
+              onChange={(e) => setLocalPeriodStart(e.target.value)}
               className="flex-1 border border-slate-300 rounded px-2 py-1 text-sm"
             />
           </div>
@@ -285,11 +322,8 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
               id="period-end"
               type="text"
               placeholder="AAAA-MM"
-              value={
-                localPeriodEnd === "0000-00" ? "" : localPeriodEnd
-              }
-              onChange={(e) => 
-                setLocalPeriodEnd(e.target.value)}
+              value={localPeriodEnd === "0000-00" ? "" : localPeriodEnd}
+              onChange={(e) => setLocalPeriodEnd(e.target.value)}
               className="flex-1 border border-slate-300 rounded px-2 py-1 text-sm"
             />
           </div>
@@ -431,7 +465,7 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
       </div>
 
       <button
-        onClick={handleApplyFilters}
+        onClick={(e) => handleClick(e)}
         className="w-full bg-indigo-600 text-white rounded px-3 py-2 cursor-pointer"
       >
         Aplicar Filtros

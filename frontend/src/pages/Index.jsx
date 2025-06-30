@@ -1,18 +1,28 @@
-import { useState } from "react";
-import { TrendingUp, MapPin, Target, BarChart } from "lucide-react";
+import { useState, useEffect } from "react";
+import { BarChart, MapPin, Target, TrendingUp } from "lucide-react";
 import FilterPanel from "../components/FilterPanel";
 import InvestmentChart from "../components/InvestmentChart";
 import BrazilHeatMap from "../components/BrazilHeatMap";
 import RecommendationsPanel from "../components/RecommendationsPanel";
 import MetricsCards from "../components/MetricsCards";
 
-
 const Index = () => {
   const [filters, setFilters] = useState({
-    period: { start: "", end: "" },
-    categories: [],
-    states: [],
+    ascending: "true",
+    data_fim: "2024-12",
+    data_inicio: "2024-01",
+    favorecido: [],
+    funcao: [],
+    group: [],
+    order_by: "",
+    programa: [],
+    tipo: [],
+    uf: [],
   });
+
+  useEffect(() => {
+    localStorage.setItem("filtros", JSON.stringify(filters));
+  }, [filters]);
 
   const [activeTab, setActiveTab] = useState("analytics");
 
@@ -40,7 +50,7 @@ const Index = () => {
 
       {/* Conteúdo */}
       <div className="container mx-auto px-6 py-8 space-y-8">
-        <MetricsCards />
+        <MetricsCards filters={filters} />
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1">
             <FilterPanel filters={filters} onFiltersChange={setFilters} />
@@ -58,7 +68,11 @@ const Index = () => {
                       : "bg-white border-slate-300 text-slate-700"
                   }`}
               >
-                <BarChart className="w-4 h-4" />
+                <BarChart
+                  filtros={filters}
+                  setFiltros={setFilters}
+                  className="w-4 h-4"
+                />
                 <span>Analytics</span>
               </button>
               <button
@@ -87,11 +101,11 @@ const Index = () => {
               </button>
             </div>
 
-            
-
             {/* Conteúdo da Tab */}
             <div className="space-y-6">
-              {activeTab === "analytics" && <InvestmentChart filters={filters}/>}
+              {activeTab === "analytics" && (
+                <InvestmentChart filters={filters} />
+              )}
               {activeTab === "map" && <BrazilHeatMap filters={filters} />}
               {activeTab === "recommendations" && (
                 <RecommendationsPanel filters={filters} />
