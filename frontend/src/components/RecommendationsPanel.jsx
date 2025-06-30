@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Target,
   TrendingUp,
   AlertTriangle,
   Star,
   ExternalLink,
+  RotateCcw,
 } from "lucide-react";
+
 
 const RecommendationsPanel = () => {
   const strategicRecommendations = [
@@ -191,19 +193,15 @@ const RecommendationsPanel = () => {
     }
   ];
 
-  const [randomRecommendations, setRandomRecommendations] = useState([]);
-  const [priorityCount, setPriorityCount] = useState({ alta: 0, media: 0, baixa: 0 });
+  const getInitialCards = () => strategicRecommendations.slice(0, 5);
 
-  useEffect(() => {
-    const getRandomRecommendations = () => {
-      const shuffled = [...strategicRecommendations].sort(() => 0.5 - Math.random());
-      return shuffled.slice(0, 5);
-    };
+  const getRandomRecommendations = () => {
+    const shuffled = [...strategicRecommendations].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 5);
+  };
 
-    const randomRecs = getRandomRecommendations();
-    setRandomRecommendations(randomRecs);
-
-    const counts = randomRecs.reduce(
+  const calculatePriorityCount = (recommendations) => {
+    return recommendations.reduce(
       (acc, item) => {
         if (item.priority === "alta") acc.alta++;
         else if (item.priority === "media") acc.media++;
@@ -212,8 +210,18 @@ const RecommendationsPanel = () => {
       },
       { alta: 0, media: 0, baixa: 0 }
     );
-    setPriorityCount(counts);
-  }, []);
+  };
+
+  const initialCards = getInitialCards();
+  const [randomRecommendations, setRandomRecommendations] = useState(initialCards);
+  const [priorityCount, setPriorityCount] = useState(calculatePriorityCount(initialCards));
+
+  const randomizeRecommendations = () => {
+    const randomRecs = getRandomRecommendations();
+    setRandomRecommendations(randomRecs);
+    setPriorityCount(calculatePriorityCount(randomRecs));
+  };
+
 
   const getPriorityColor = (priority) => {
     switch (priority) {
@@ -286,6 +294,18 @@ const RecommendationsPanel = () => {
           </div>
         ))}
       </div>
+
+      {/* Randomize Button */}
+      <div className="flex justify-end">
+        <button
+          onClick={randomizeRecommendations}
+          className="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow transition-all gap-2"
+        >
+          <RotateCcw className="w-5 h-5" />
+          <span>Aleatorizar Recomendações</span>
+        </button>
+      </div>
+
 
       {/* Recommendations List */}
       <div className="space-y-4">
