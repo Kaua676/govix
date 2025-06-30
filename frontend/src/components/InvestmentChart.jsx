@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { Bar, Pie, Radar } from "react-chartjs-2";
+import {
+  BarChart as BarChartIcon,
+  PieChart as PieChartIcon,
+} from "lucide-react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,15 +17,13 @@ import {
   BarElement,
   BarController,
 } from "chart.js";
-import {
-  BarChart as BarChartIcon,
-  PieChart as PieChartIcon,
-} from "lucide-react";
+
 import BarChart from "./BarChart";
+import RadarChart from "./RadarChart";
+import PieChart from "./PieChart";
+import InvestmentMetrics from "./InvestmentMetrics";
 import api from "../services/api";
 
-import RadarChart from "./RadarChart"
-import PieChart from "./PieChart";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -43,7 +44,6 @@ const InvestmentChart = ({ filters }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-
   const formatCurrency = (value) =>
     new Intl.NumberFormat("pt-BR", {
       style: "currency",
@@ -57,7 +57,6 @@ const InvestmentChart = ({ filters }) => {
       setError(null);
       try {
         const response = await api.post("/filtro-anual", filters);
-        console.log("Resposta da API:", response.data);  // <-- Aqui
         setTableData(response.data);
       } catch (err) {
         console.error("Erro na API:", err);
@@ -66,18 +65,19 @@ const InvestmentChart = ({ filters }) => {
         setLoading(false);
       }
     }
+
     fetchData();
   }, [filters]);
 
-
   const renderChart = () => {
-    if (chartType === "bar") return <BarChart filters={filters}/>;
-    if (chartType === "radar") return <RadarChart filters={filters}/>;
+    if (chartType === "bar") return <BarChart filters={filters} />;
+    if (chartType === "radar") return <RadarChart filters={filters} />;
     return <PieChart filters={filters} />;
   };
 
   return (
     <div className="space-y-6">
+      {/* Gráfico */}
       <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-lg p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-slate-800">
@@ -85,30 +85,33 @@ const InvestmentChart = ({ filters }) => {
           </h2>
           <div className="flex space-x-2">
             <button
-              className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "radar"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-slate-700 border-slate-300"
-                }`}
+              className={`flex items-center px-3 py-1 rounded text-sm border ${
+                chartType === "radar"
+                  ? "bg-blue-600 text-white"
+                  : "bg-white text-slate-700 border-slate-300"
+              }`}
               onClick={() => setChartType("radar")}
             >
               <BarChartIcon className="w-4 h-4 mr-1" />
               Radar
             </button>
             <button
-              className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "pie"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-slate-700 border-slate-300"
-                }`}
+              className={`flex items-center px-3 py-1 rounded text-sm border ${
+                chartType === "pie"
+                  ? "bg-blue-600 text-white"
+                  : "bg-white text-slate-700 border-slate-300"
+              }`}
               onClick={() => setChartType("pie")}
             >
               <PieChartIcon className="w-4 h-4 mr-1" />
               Distribuição
             </button>
             <button
-              className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "bar"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-slate-700 border-slate-300"
-                }`}
+              className={`flex items-center px-3 py-1 rounded text-sm border ${
+                chartType === "bar"
+                  ? "bg-blue-600 text-white"
+                  : "bg-white text-slate-700 border-slate-300"
+              }`}
               onClick={() => setChartType("bar")}
             >
               <BarChartIcon className="w-4 h-4 mr-1" />
@@ -116,9 +119,12 @@ const InvestmentChart = ({ filters }) => {
             </button>
           </div>
         </div>
-        <div className="aspect-square max-h-[500px] mx-auto">{renderChart()}</div>
+        <div className="aspect-square max-h-[500px] mx-auto">
+          {renderChart()}
+        </div>
       </div>
 
+      {/* Tabela */}
       <div className="mt-6 bg-white rounded-md border border-slate-300 p-4 max-w-full">
         {loading ? (
           <div>Carregando dados...</div>
@@ -132,7 +138,9 @@ const InvestmentChart = ({ filters }) => {
                   <th className="border px-3 py-2 text-left">Ano</th>
                   <th className="border px-3 py-2 text-left">Função</th>
                   <th className="border px-3 py-2 text-left">Estado (UF)</th>
-                  <th className="border px-3 py-2 text-right">Total Investido</th>
+                  <th className="border px-3 py-2 text-right">
+                    Total Investido
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -142,7 +150,7 @@ const InvestmentChart = ({ filters }) => {
                     <td className="border px-3 py-2">{row.Função}</td>
                     <td className="border px-3 py-2">{row.UF}</td>
                     <td className="border px-3 py-2 text-right">
-                      {formatCurrency(row["Total Investido"])}
+                      {formatCurrency(row["Total Investido"] || 0)}
                     </td>
                   </tr>
                 ))}
@@ -151,9 +159,11 @@ const InvestmentChart = ({ filters }) => {
           </div>
         )}
       </div>
+
+      {/* Cards de Métricas */}
+      <InvestmentMetrics filters={filters} />
     </div>
   );
 };
 
 export default InvestmentChart;
-
