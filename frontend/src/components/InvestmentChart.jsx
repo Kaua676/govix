@@ -21,6 +21,8 @@ import {
 import BarChart from "./BarChart";
 import api from "../services/api";
 
+import RadarChart from "./RadarChart"
+import PieChart from "./PieChart";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -41,7 +43,6 @@ const InvestmentChart = ({ filters }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const monthlyData = [];
 
   const formatCurrency = (value) =>
     new Intl.NumberFormat("pt-BR", {
@@ -70,79 +71,9 @@ const InvestmentChart = ({ filters }) => {
 
 
   const renderChart = () => {
-    if (chartType === "bar") return <BarChart filters={filters} />;
-    if (chartType === "radar") {
-      const radarData = {
-        labels: monthlyData.map((d) => d.month),
-        datasets: [
-          {
-            label: "Saúde",
-            data: monthlyData.map((d) => d.saude),
-            backgroundColor: "#ef444433",
-            borderColor: "#ef4444",
-          },
-          {
-            label: "Educação",
-            data: monthlyData.map((d) => d.educacao),
-            backgroundColor: "#3b82f633",
-            borderColor: "#3b82f6",
-          },
-          {
-            label: "Segurança",
-            data: monthlyData.map((d) => d.seguranca),
-            backgroundColor: "#eab30833",
-            borderColor: "#eab308",
-          },
-          {
-            label: "Tecnologia",
-            data: monthlyData.map((d) => d.tecnologia),
-            backgroundColor: "#8b5cf633",
-            borderColor: "#8b5cf6",
-          },
-        ],
-      };
-
-      const radarOptions = {
-        maintainAspectRatio: false,
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: (ctx) => formatCurrency(ctx.parsed.r ?? ctx.parsed),
-            },
-          },
-        },
-        scales: {
-          r: {
-            ticks: { display: false },
-            pointLabels: { font: { size: 12 }, color: "#64748b" },
-            grid: { circular: true },
-          },
-        },
-      };
-
-      return <Radar data={radarData} options={radarOptions} />;
-    }
-
-    const categoryData = [
-      { name: "Saúde", value: 319000000, color: "#ef4444" },
-      { name: "Educação", value: 262000000, color: "#3b82f6" },
-      { name: "Segurança", value: 172000000, color: "#eab308" },
-      { name: "Tecnologia", value: 139000000, color: "#8b5cf6" },
-      { name: "Infraestrutura", value: 98000000, color: "#10b981" },
-      { name: "Meio Ambiente", value: 76000000, color: "#06b6d4" },
-    ];
-
-    const pieData = {
-      labels: categoryData.map((d) => d.name),
-      datasets: [
-        {
-          data: categoryData.map((d) => d.value),
-          backgroundColor: categoryData.map((d) => d.color),
-        },
-      ],
-    };
-
-    return <Pie data={pieData} options={{ maintainAspectRatio: false }} />;
+    if (chartType === "bar") return <BarChart filters={filters}/>;
+    if (chartType === "radar") return <RadarChart filters={filters}/>;
+    return <PieChart filters={filters} />;
   };
 
   return (
@@ -153,8 +84,8 @@ const InvestmentChart = ({ filters }) => {
           <div className="flex space-x-2">
             <button
               className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "radar"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-slate-700 border-slate-300"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-slate-700 border-slate-300"
                 }`}
               onClick={() => setChartType("radar")}
             >
@@ -163,8 +94,8 @@ const InvestmentChart = ({ filters }) => {
             </button>
             <button
               className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "pie"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-slate-700 border-slate-300"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-slate-700 border-slate-300"
                 }`}
               onClick={() => setChartType("pie")}
             >
@@ -173,8 +104,8 @@ const InvestmentChart = ({ filters }) => {
             </button>
             <button
               className={`flex items-center px-3 py-1 rounded text-sm border ${chartType === "bar"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-slate-700 border-slate-300"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-slate-700 border-slate-300"
                 }`}
               onClick={() => setChartType("bar")}
             >
@@ -183,7 +114,7 @@ const InvestmentChart = ({ filters }) => {
             </button>
           </div>
         </div>
-        <div className="h-96">{renderChart()}</div>
+        <div className="aspect-square max-h-[500px] mx-auto">{renderChart()}</div>
       </div>
 
       <div className="mt-6 bg-white rounded-md border border-slate-300 p-4 max-w-full">
