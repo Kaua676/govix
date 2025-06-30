@@ -101,32 +101,6 @@ const InvestmentChart = ({filters}) => {
       minimumFractionDigits: 0,
     }).format(value);
 
-  const barData = {
-    labels: monthlyDataScaled.map((d) => d.month),
-    datasets: [
-      {
-        label: "Saúde",
-        data: monthlyDataScaled.map((d) => d.saude),
-        backgroundColor: "#ef4444",
-      },
-      {
-        label: "Educação",
-        data: monthlyDataScaled.map((d) => d.educacao),
-        backgroundColor: "#3b82f6",
-      },
-      {
-        label: "Segurança",
-        data: monthlyDataScaled.map((d) => d.seguranca),
-        backgroundColor: "#eab308",
-      },
-      {
-        label: "Tecnologia",
-        data: monthlyDataScaled.map((d) => d.tecnologia),
-        backgroundColor: "#8b5cf6",
-      },
-    ],
-  };
-
   const radarData = {
     labels: monthlyDataScaled.map((d) => d.month),
     datasets: [
@@ -165,59 +139,6 @@ const InvestmentChart = ({filters}) => {
         backgroundColor: categoryDataScaled.map((d) => d.color),
       },
     ],
-  };
-
-  const options = {
-    maintainAspectRatio: false,
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: (ctx) => formatCurrency(ctx.parsed.y ?? ctx.parsed),
-        },
-      },
-    },
-    scales: {
-      y: {
-        ticks: {
-          callback: (value) => formatCurrency(value),
-        },
-      },
-    },
-  };
-
-  const barOptions = {
-    maintainAspectRatio: false,
-    plugins: {
-      title: {
-        display: true,
-        text: "Análise de Investimentos por Categoria (Mensal)",
-      },
-      tooltip: {
-        callbacks: {
-          label: (ctx) => formatCurrency(ctx.parsed.y),
-        },
-      },
-    },
-    responsive: true,
-    scales: {
-      x: {
-        stacked: true,
-        title: {
-          display: true,
-          text: "Mês",
-        },
-      },
-      y: {
-        stacked: true,
-        ticks: {
-          callback: (value) => formatCurrency(value),
-        },
-        title: {
-          display: true,
-          text: "Valor Investido",
-        },
-      },
-    },
   };
 
   const radarOptions = {
