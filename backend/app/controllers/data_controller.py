@@ -169,7 +169,7 @@ def filtro_mensal():
 
     return resultado.to_json(orient="records", force_ascii=False)
 
-@data_bp.route("/filtro_anual", methods=["POST"])
+@data_bp.route("/filtro-anual", methods=["POST"])
 def filtrar_dados():
     """
     Filtrar dados por UF, Função, Tipo e outros parâmetros
@@ -226,8 +226,8 @@ def filtrar_dados():
               type: string
               example: "Ano"
             ascending:
-              type: boolean
-              example: false
+              type: string
+              example: "false"
             group:
               type: array
               items:
