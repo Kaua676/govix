@@ -69,7 +69,7 @@ const Index = () => {
                     : "bg-white border-slate-300 text-slate-700"
                 }`}
               >
-                <BarChart className="w-4 h-4" />
+                <BarChart filtros={filters} setFiltros={setFilters} className="w-4 h-4" />
                 <span>Analytics</span>
               </button>
               <button
