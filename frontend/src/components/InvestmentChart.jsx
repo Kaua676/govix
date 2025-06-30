@@ -19,8 +19,8 @@ import {
   PieChart as PieChartIcon,
 } from "lucide-react";
 import BarChart from "./BarChart";
+import RadarChart from "./RadarChart"
 import PieChart from "./PieChart";
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -169,8 +169,8 @@ const InvestmentChart = ({ filters }) => {
   };
 
   const renderChart = () => {
-    if (chartType === "bar") return <BarChart filters={filters} />;
-    if (chartType === "radar") return <Radar data={radarData} options={radarOptions} />;
+    if (chartType === "bar") return <BarChart filters={filters}/>;
+    if (chartType === "radar") return <RadarChart filters={filters}/>;
     return <PieChart filters={filters} />;
   };
 
@@ -212,7 +212,7 @@ const InvestmentChart = ({ filters }) => {
             </button>
           </div>
         </div>
-        <div className="h-96">{renderChart()}</div>
+        <div className="aspect-square max-h-[500px] mx-auto">{renderChart()}</div>
       </div>
 
       <div className="mt-6 bg-white rounded-md border border-slate-300 p-4 max-w-full">
