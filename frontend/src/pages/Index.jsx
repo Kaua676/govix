@@ -9,8 +9,8 @@ import MetricsCards from "../components/MetricsCards";
 const Index = () => {
   const [filters, setFilters] = useState({
     ascending: "true",
-    data_fim: "2018-12",
-    data_inicio: "2018-01",
+    data_fim: "2024-12",
+    data_inicio: "2024-01",
     favorecido: [],
     funcao: [],
     group: [],
