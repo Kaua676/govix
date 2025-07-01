@@ -145,9 +145,6 @@ const BrazilHeatMap = ({ filters }) => {
                     <div className="font-bold text-slate-800">
                       {formatCurrency(item["Total Investido"] || 0)}
                     </div>
-                    <div className="text-sm text-green-600">
-                      Ano: {item.Ano}
-                    </div>
                   </div>
                 </div>
               );
