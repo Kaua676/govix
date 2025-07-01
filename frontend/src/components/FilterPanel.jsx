@@ -159,12 +159,12 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
   }
 
   function handleGroupByChange(value) {
-    setSelectedGroupBy(value);
+    setSelectedGroupBy([value]);
   }
 
   function clearFilters() {
-    setLocalPeriodStart("2018-01");
-    setLocalPeriodEnd("2018-12");
+    setLocalPeriodStart("2025-01");
+    setLocalPeriodEnd("2025-12");
     setSelectedCategories([]);
     setSelectedStates([""]);
     setSelectedTipo("");
@@ -173,8 +173,8 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
     setSelectedGroupBy("");
     onFiltersChange({
       ascending: "true",
-      data_fim: "2025-06",
-      data_inicio: "2018-01",
+      data_fim: "2025-12",
+      data_inicio: "2025-01",
       favorecido: [],
       funcao: [],
       group: [],

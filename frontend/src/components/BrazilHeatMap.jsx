@@ -24,8 +24,7 @@ const BrazilHeatMap = ({ filters }) => {
     setLoading(true);
     setError(null);
 
-    api
-      .post("/filtro-anual", filters)
+    api.post("/filtro-ranking", filters)
       .then((response) => {
         const data = response.data;
         const dataArray = Array.isArray(data) ? data : [data];
@@ -145,9 +144,6 @@ const BrazilHeatMap = ({ filters }) => {
                   <div className="text-right">
                     <div className="font-bold text-slate-800">
                       {formatCurrency(item["Total Investido"] || 0)}
-                    </div>
-                    <div className="text-sm text-green-600">
-                      Ano: {item.Ano}
                     </div>
                   </div>
                 </div>
