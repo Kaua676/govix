@@ -173,7 +173,7 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
     setSelectedGroupBy("");
     onFiltersChange({
       ascending: "true",
-      data_fim: "2018-12",
+      data_fim: "2025-06",
       data_inicio: "2018-01",
       favorecido: [],
       funcao: [],

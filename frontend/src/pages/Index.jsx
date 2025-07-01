@@ -11,8 +11,8 @@ const Index = () => {
   const stored = localStorage.getItem("filtros");
   return stored ? JSON.parse(stored) : {
     ascending: "true",
-    data_fim: "2025-12",
-    data_inicio: "2025-01",
+    data_fim: "2025-06",
+    data_inicio: "2018-01",
     favorecido: [],
     funcao: [],
     group: [],

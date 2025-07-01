@@ -302,7 +302,6 @@ const RecommendationsPanel = () => {
           className="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow transition-all gap-2"
         >
           <RotateCcw className="w-5 h-5" />
-          <span>Aleatorizar Recomendações</span>
         </button>
       </div>
 

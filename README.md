@@ -4,7 +4,7 @@ Radar de Oportunidades Govtech
 
 ## 📌 Descrição
 
-**Govix IA** é uma aplicação web que analisa transferências públicas e fornece insights estratégicos para empresas que atuam no setor **GovTech**. A plataforma integra dados governamentais com visualizações inteligentes, mapa de calor e um painel de recomendações baseadas em IA.
+**Govix** é uma aplicação web que analisa transferências públicas e fornece insights estratégicos para empresas que atuam no setor **GovTech**. A plataforma integra dados governamentais com visualizações inteligentes, mapa de calor e um painel de recomendações baseadas em IA.
 
 ---
 
@@ -155,6 +155,11 @@ Utilizado para organizar sprints e tarefas.
 ### 💻 GitHub
 Repositório principal:  
 [https://github.com/Kaua676/govix](https://github.com/Kaua676/govix)
+
+
+## 📖 Manual de Uso
+
+Para instruções detalhadas de instalação, navegação e exemplos de requisições da API consulte o arquivo [MANUAL.md](MANUAL.md).
 
 ---
 
