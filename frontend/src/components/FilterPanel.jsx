@@ -159,7 +159,7 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
   }
 
   function handleGroupByChange(value) {
-    setSelectedGroupBy(value);
+    setSelectedGroupBy([value]);
   }
 
   function clearFilters() {
