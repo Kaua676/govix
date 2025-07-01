@@ -56,9 +56,6 @@ const ufLabelPlugin = {
 
 const BarChart = ({filters}) => {
     const [chartData, setChartData] = useState({ labels: [], datasets: [] });
-    console.log("----BAR----")
-    console.log(filters)
-    console.log("--------")
     filters.order_by = ""
 
     useEffect(() => {
