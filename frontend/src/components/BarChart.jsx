@@ -20,7 +20,7 @@ ChartJS.register(
     Title
 );
 
-// Plugin para exibir a UF abaixo da barra
+
 const ufLabelPlugin = {
     id: "ufLabelPlugin",
     afterDatasetsDraw(chart) {
@@ -43,8 +43,8 @@ const ufLabelPlugin = {
                         ctx.font = "bold 11px sans-serif";
                         ctx.fillStyle = "#000";
                         ctx.textAlign = "center";
-                        ctx.translate(bar.x, bottom + 60); // Posição abaixo do eixo
-                        ctx.rotate(-Math.PI / 2); // Rotaciona 90 graus para escrever em pé
+                        ctx.translate(bar.x, bottom + 60);
+                        ctx.rotate(-Math.PI / 2); 
                         ctx.fillText(dataset.stack, 0, 0);
                         ctx.restore();
                     }
@@ -167,7 +167,7 @@ const BarChart = ({filters}) => {
                                     text: ds.label,
                                     fillStyle: ds.backgroundColor,
                                     hidden: chart.getDatasetMeta(i).hidden,
-                                    datasetIndex: i, // necessário para o toggle funcionar
+                                    datasetIndex: i, 
                                 };
                             });
                     },
@@ -176,7 +176,6 @@ const BarChart = ({filters}) => {
                     const chart = legend.chart;
                     const label = legendItem.text;
 
-                    // Alterna a visibilidade de todos os datasets com a mesma label
                     chart.data.datasets.forEach((ds, i) => {
                         if (ds.label === label) {
                             const meta = chart.getDatasetMeta(i);
@@ -195,7 +194,6 @@ const BarChart = ({filters}) => {
         },
         layout: {
             padding: {
-                bottom: 45, // espaço suficiente para as UF rotacionadas
             },
         },
         scales: {
