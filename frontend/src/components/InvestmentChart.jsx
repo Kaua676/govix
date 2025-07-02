@@ -39,7 +39,7 @@ ChartJS.register(
 );
 
 const InvestmentChart = ({ filters }) => {
-  const [chartType, setChartType] = useState("line");
+  const [chartType, setChartType] = useState("radar");
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
