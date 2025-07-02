@@ -552,10 +552,6 @@ def mapa_funcao_ano():
       margin={"r":0, "t":40, "l":0, "b":0}
   )
   
-  # fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2000
-
-  # fig.show()
-
   return pio.to_json(fig)
 
 @data_bp.route("/ultima-atualizacao", methods=["GET"])
