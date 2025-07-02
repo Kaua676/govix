@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../services/api"; // axios configurado
+import api from "../services/api";
 import BrazilPlotlyHeatMap from "./BrazilPlotlyHeatMap.jsx";
 import RegionalMetrics from "./RegionalMetrics.jsx";
 
@@ -145,7 +145,7 @@ const BrazilHeatMap = ({ filters }) => {
             })}
         </div>
       </div>
-        <RegionalMetrics filters={filters} />
+      <RegionalMetrics filters={filters} />
     </div>
   );
 };
