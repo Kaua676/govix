@@ -143,7 +143,7 @@ def filtro_mensal():
 
     ascending = json.loads(params.get("ascending").lower()) if params.get("ascending") else False
 
-    group = ["Mês/Ano", "UF", "Função"]
+    group = ["Data", "Mês/Ano", "UF", "Função"]
     if group_by := params.get("group"):
         for g in group_by:
             group.append(g)
@@ -157,7 +157,6 @@ def filtro_mensal():
     else:
         df_filtrado = df.copy()
 
-    # Exemplo de agrupamento final
     resultado = (
         df_filtrado
         .groupby(group)["Valor Transferido"]
