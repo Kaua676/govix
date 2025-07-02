@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../services/api"; // axios configurado
+import api from "../services/api"; 
 import BrazilPlotlyHeatMap from "./BrazilPlotlyHeatMap.jsx";
 
 const BrazilHeatMap = ({ filters }) => {
@@ -80,9 +80,6 @@ const BrazilHeatMap = ({ filters }) => {
             </h3>
             <BrazilPlotlyHeatMap
               filters={filters}
-              // ranking={ranking}
-              // onSelectState={(uf) => setSelectedState(uf)}
-              // selectedState={selectedState}
             />
           </div>
         </div>

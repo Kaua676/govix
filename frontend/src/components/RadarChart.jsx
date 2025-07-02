@@ -60,7 +60,6 @@ const RadarChart = ({ filters }) => {
         const funcoes = new Set();
         const dadosPorFuncao = {};
 
-        // Estrutura: { [funcao]: { [ano]: total } }
         data.forEach((item) => {
           const funcao = item["Função"];
           const ano = item["Ano"];
@@ -88,7 +87,7 @@ const RadarChart = ({ filters }) => {
           return {
             label: funcao,
             data: anosOrdenados.map((ano) => dadosPorFuncao[funcao][ano] || 0),
-            backgroundColor: cor + "33", // transparência no fundo
+            backgroundColor: cor + "33", 
             borderColor: cor,
             pointBackgroundColor: cor,
             borderWidth: 2,
