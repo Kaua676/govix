@@ -19,7 +19,7 @@ const Index = () => {
     order_by: "",
     programa: [],
     tipo: [],
-    uf: ["MS"]
+    uf: ["AC"]
   };
 });
 
@@ -73,8 +73,6 @@ const Index = () => {
                   }`}
               >
                 <BarChart
-                  filtros={filters}
-                  setFiltros={setFilters}
                   className="w-4 h-4"
                 />
                 <span>Analytics</span>
