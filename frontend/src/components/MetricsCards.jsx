@@ -1,4 +1,4 @@
-import { TrendingUp, DollarSign, Building, Calendar } from "lucide-react";
+import { Building, Calendar, DollarSign, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import api from "../services/api";
 
@@ -10,6 +10,8 @@ const formatValor = (valor) => {
 };
 
 const MetricsCards = ({ filters }) => {
+  const [ultimaData, setUltimaData] = useState("")
+  const [ultimoHoraio, setUltimoHorario] = useState("")
   const [metrics, setMetrics] = useState([
     { title: "Investimento Total", value: "...", icon: DollarSign },
     { title: "Estados Identificados", value: "...", icon: TrendingUp },
@@ -20,84 +22,92 @@ const MetricsCards = ({ filters }) => {
   // Log quando as métricas forem atualizadas
   useEffect(() => {}, [metrics]);
 
+  
   useEffect(() => {
-    api
-      .post("filtro-mensal", filters, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        const data = response.data;
+  // Primeiro busca a última atualização
+  api
+    .get("/ultima-atualizacao")
+    .then((res) => {
+      const { data_modificacao, hora_modificacao } = res.data;
+      const dataFormatada = data_modificacao
+        ? data_modificacao.split("-").reverse().join("/")
+        : "Data indisponível";
 
-        const totalInvestido = data.reduce((acc, cur) => {
-          const valor = cur["Total Investido"] || 0;
-          return acc + valor;
-        }, 0);
+      // Depois, chama o filtro-mensal
+      api
+        .post("filtro-mensal", filters, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          const data = response.data;
 
-        const estados = [...new Set(data.map((d) => d["UF"]))].length;
-        const funcoes = [...new Set(data.map((d) => d["Função"]))].length;
+          const totalInvestido = data.reduce((acc, cur) => {
+            const valor = cur["Total Investido"] || 0;
+            return acc + valor;
+          }, 0);
 
-        const now = new Date();
-        const horario = now.toLocaleTimeString("pt-BR", {
-          hour: "2-digit",
-          minute: "2-digit",
+          const estados = [...new Set(data.map((d) => d["UF"]))].length;
+          const funcoes = [...new Set(data.map((d) => d["Função"]))].length;
+
+          const novasMetricas = [
+            {
+              title: "Investimento Total",
+              value: formatValor(totalInvestido),
+              change: "",
+              trend: "neutral",
+              icon: DollarSign,
+              description: "Valor somado no período filtrado",
+            },
+            {
+              title: "Estados Identificados",
+              value: estados.toString(),
+              change: "",
+              trend: "neutral",
+              icon: TrendingUp,
+              description: "UFs presentes no recorte",
+            },
+            {
+              title: "Funções Encontradas",
+              value: funcoes.toString(),
+              change: "",
+              trend: "neutral",
+              icon: Building,
+              description: "Categorias mapeadas",
+            },
+            {
+              title: "Última Atualização",
+              value: dataFormatada,
+              change: hora_modificacao || "",
+              trend: "neutral",
+              icon: Calendar,
+              description: "Sincronização automática",
+            },
+          ];
+
+          console.log("✅ Atualizando métricas com:", novasMetricas);
+          setMetrics(novasMetricas);
+        })
+        .catch((error) => {
+          console.error("❌ Erro ao carregar métricas:", error);
         });
-
-        const novasMetricas = [
-          {
-            title: "Investimento Total",
-            value: formatValor(totalInvestido),
-            change: "",
-            trend: "neutral",
-            icon: DollarSign,
-            description: "Valor somado no período filtrado",
-          },
-          {
-            title: "Estados Identificados",
-            value: estados.toString(),
-            change: "",
-            trend: "neutral",
-            icon: TrendingUp,
-            description: "UFs presentes no recorte",
-          },
-          {
-            title: "Funções Encontradas",
-            value: funcoes.toString(),
-            change: "",
-            trend: "neutral",
-            icon: Building,
-            description: "Categorias mapeadas",
-          },
-          {
-            title: "Última Atualização",
-            value: "Hoje",
-            change: horario,
-            trend: "neutral",
-            icon: Calendar,
-            description: "Sincronização automática",
-          },
-        ];
-
-        console.log("✅ Atualizando métricas com:", novasMetricas);
-        setMetrics(novasMetricas);
-      })
-      .catch((error) => {
-        console.error("❌ Erro ao carregar métricas:", error);
-      });
-  }, [filters]);
-
+    })
+    .catch((err) => {
+      console.error("❌ Erro ao buscar data de atualização:", err);
+    });
+}, [filters]);
+    
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((metric, index) => {
           const IconComponent = metric.icon;
-          const trendColor =
-            metric.trend === "up"
-              ? "text-green-600"
-              : metric.trend === "down"
-              ? "text-red-600"
-              : "text-slate-600";
+          const trendColor = metric.trend === "up"
+            ? "text-green-600"
+            : metric.trend === "down"
+            ? "text-red-600"
+            : "text-slate-600";
 
           return (
             <div
