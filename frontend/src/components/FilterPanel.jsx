@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 const FilterPanel = ({ filters, onFiltersChange }) => {
-  // Lista de categorias com nome e cor
   const categories = [
     { id: "Administração", label: "Administração", color: "bg-[#2563eb] text-white" },
     { id: "Agricultura", label: "Agricultura", color: "bg-[#16a34a] text-white" },
@@ -32,7 +31,6 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
   ];
 
 
-  // Lista de todos os estados do Brasil
   const states = [
     "AC",
     "AL",
@@ -233,27 +231,30 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
       <hr className="border-slate-200" />
 
       {/* Categorias */}
-      <div className="space-y-2 max-h-44 overflow-y-auto pr-1">
+      <div className="space-y-2">
         <label className="text-sm font-semibold text-slate-700">
           Categorias
         </label>
-        {categories.map((cat) => (
-          <div key={cat.id} className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id={cat.id}
-              checked={selectedCategories.includes(cat.id)}
-              onChange={(e) =>
-                handleCategoryChange(cat.id, e.target.checked)}
-            />
-            <label htmlFor={cat.id} className="text-sm cursor-pointer">
-              <span className={`inline-block px-2 py-1 rounded ${cat.color}`}>
-                {cat.label}
-              </span>
-            </label>
-          </div>
-        ))}
+        <div className="max-h-44 overflow-y-auto pr-1 space-y-2">
+          {categories.map((cat) => (
+            <div key={cat.id} className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id={cat.id}
+                checked={selectedCategories.includes(cat.id)}
+                onChange={(e) =>
+                  handleCategoryChange(cat.id, e.target.checked)}
+              />
+              <label htmlFor={cat.id} className="text-sm cursor-pointer">
+                <span className={`inline-block px-2 py-1 rounded ${cat.color}`}>
+                  {cat.label}
+                </span>
+              </label>
+            </div>
+          ))}
+        </div>
       </div>
+
 
       <hr className="border-slate-200" />
 

@@ -17,7 +17,6 @@ const MetricsCards = ({ filters }) => {
     { title: "Última Atualização", value: "...", icon: Calendar },
   ]);
 
-  // Log quando as métricas forem atualizadas
   useEffect(() => {}, [metrics]);
 
   useEffect(() => {
