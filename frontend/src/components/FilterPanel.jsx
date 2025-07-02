@@ -161,6 +161,13 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
       uf: [],
     });
   }
+  const clearFiltersState = () => {
+    setSelectedStates([]);
+  };
+  const clearFiltersCategories = () => {
+    setSelectedCategories([]);
+  };
+
 
   function handleApplyFilters() {
     onFiltersChange({
@@ -232,9 +239,17 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
 
       {/* Categorias */}
       <div className="space-y-2">
-        <label className="text-sm font-semibold text-slate-700">
-          Categorias
-        </label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold text-slate-700">
+            Categorias
+          </label>
+          <button
+            onClick={clearFiltersCategories}
+            className="text-sm text-slate-500 hover:text-red-500 px-2"
+          >
+            ×
+          </button>
+        </div>
         <div className="max-h-44 overflow-y-auto pr-1 space-y-2">
           {categories.map((cat) => (
             <div key={cat.id} className="flex items-center space-x-2">
@@ -260,7 +275,15 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
 
       {/* Estados */}
       <div className="space-y-3">
-        <label className="text-sm font-semibold text-slate-700">Estados</label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold text-slate-700">Estados</label>
+          <button
+            onClick={clearFiltersState}
+            className="text-sm text-slate-500 hover:text-red-500 px-2"
+          >
+            ×
+          </button>
+        </div>
         <div className="space-y-2 max-h-44 overflow-y-auto">
           {states.map((estado) => (
             <div key={estado} className="flex items-center space-x-2">
