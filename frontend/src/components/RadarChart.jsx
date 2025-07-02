@@ -119,13 +119,11 @@ const RadarChart = ({ filters }) => {
             size: 13, 
           },
         },
-        suggestedMin: 0,
         ticks: {
           callback: (value) => `R$ ${value / 1_000_000} mi`,
           font: {
             size: 11,
           },
-          stepSize: 1_000_000,
           maxTicksLimit: 3,
           
         },
