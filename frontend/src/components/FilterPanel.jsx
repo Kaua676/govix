@@ -98,7 +98,7 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
     filters.favorecido || "",
   );
   const [selectedOrderBy, setSelectedOrderBy] = useState(filters.order || "");
-  const [selectedGroupBy, setSelectedGroupBy] = useState(filters.group || "");
+  const [selectedGroupBy, setSelectedGroupBy] = useState(filters.group || []);
   const regex = /^\d{4}-(0[1-9]|1[0-2])$/;
 
   const handleClick = () => {
@@ -150,16 +150,12 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
     setSelectedTipo(value);
   }
 
-  function handleFavorecidoChange(value) {
-    setSelectedFavorecido(value);
-  }
-
   function handleOrderByChange(value) {
     setSelectedOrderBy(value);
   }
 
   function handleGroupByChange(value) {
-    setSelectedGroupBy([value]);
+    setSelectedGroupBy(value != "" ? [value] : []);
   }
 
   function clearFilters() {
@@ -170,7 +166,7 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
     setSelectedTipo("");
     setSelectedFavorecido([]);
     setSelectedOrderBy("");
-    setSelectedGroupBy("");
+    setSelectedGroupBy([]);
     onFiltersChange({
       ascending: "true",
       data_fim: "2025-12",
@@ -187,7 +183,7 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
 
   function handleApplyFilters() {
     onFiltersChange({
-      ascending: "true",
+      ascending: "false",
       data_fim: localPeriodEnd,
       data_inicio: localPeriodStart,
       favorecido: selectedFavorecido,

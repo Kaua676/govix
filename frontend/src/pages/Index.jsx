@@ -10,7 +10,7 @@ const Index = () => {
   const [filters, setFilters] = useState(() => {
   const stored = localStorage.getItem("filtros");
   return stored ? JSON.parse(stored) : {
-    ascending: "true",
+    ascending: "false",
     data_fim: "2025-12",
     data_inicio: "2025-01",
     favorecido: [],
