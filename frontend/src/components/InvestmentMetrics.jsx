@@ -31,8 +31,11 @@ const InvestmentMetrics = ({ filters }) => {
         const array = Array.isArray(response.data)
           ? response.data
           : [response.data];
-        setData(array);
-        data.length == 0 ? setError("Nenhum dado encontrado") : setLoading(false);
+        if (array.length === 0) {
+          setError("Nenhum dado encontrado");
+        } else {
+          setData(array);
+        }
       })
       .catch((err) => {
         console.error("Erro ao buscar dados:", err);
