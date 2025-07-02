@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api"; // axios configurado
 import BrazilPlotlyHeatMap from "./BrazilPlotlyHeatMap.jsx";
+import RegionalMetrics from "./RegionalMetrics.jsx";
 
 const BrazilHeatMap = ({ filters }) => {
   const [ranking, setRanking] = useState([]);
@@ -24,7 +25,8 @@ const BrazilHeatMap = ({ filters }) => {
     setLoading(true);
     setError(null);
 
-    api.post("/filtro-ranking", filters)
+    api
+      .post("/filtro-ranking", filters)
       .then((response) => {
         const data = response.data;
         const dataArray = Array.isArray(data) ? data : [data];
@@ -75,15 +77,7 @@ const BrazilHeatMap = ({ filters }) => {
 
         <div className="relative bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg p-8 min-h-96 flex items-center justify-center">
           <div className="text-center space-y-4 w-full">
-            <h3 className="text-xl font-bold text-slate-800">
-              Mapa Interativo do Brasil
-            </h3>
-            <BrazilPlotlyHeatMap
-              filters={filters}
-              // ranking={ranking}
-              // onSelectState={(uf) => setSelectedState(uf)}
-              // selectedState={selectedState}
-            />
+            <BrazilPlotlyHeatMap filters={filters} />
           </div>
         </div>
 
@@ -151,6 +145,7 @@ const BrazilHeatMap = ({ filters }) => {
             })}
         </div>
       </div>
+        <RegionalMetrics filters={filters} />
     </div>
   );
 };

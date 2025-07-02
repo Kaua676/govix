@@ -119,9 +119,7 @@ const InvestmentChart = ({ filters }) => {
             </button>
           </div>
         </div>
-        <div className="aspect-square max-h-[500px] mx-auto">
-          {renderChart()}
-        </div>
+        <div className="mx-auto">{renderChart()}</div>
       </div>
 
       {/* Tabela */}
