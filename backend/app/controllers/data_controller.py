@@ -282,6 +282,119 @@ def filtrar_dados():
     resultado = filtrar_dataframe(df, params)
     return resultado.to_json(orient="records", force_ascii=False)
 
+@data_bp.route("/filtro-ranking", methods=["POST"])
+def filtrar_dados_ranking():
+    """
+    Filtrar dados por UF, Função, Tipo e outros parâmetros
+    ---
+    tags:
+      - Filtros
+    consumes:
+      - application/json
+    produces:
+      - application/json
+    parameters:
+      - in: body
+        name: filtros
+        required: true
+        schema:
+          type: object
+          properties:
+            data_inicio:
+              type: string
+              format: date
+              example: "2020-01"
+              description: Data de início no formato YYYY-MM
+            data_fim:
+              type: string
+              format: date
+              example: "2023-12"
+              description: Data de fim no formato YYYY-MM
+            uf:
+              type: array
+              items:
+                type: string
+              example: ["SP", "RJ"]
+            funcao:
+              type: array
+              items:
+                type: string
+              example: ["Saúde", "Educação"]
+            tipo:
+              type: array
+              items:
+                type: string
+              example: ["Constitucionais e Royalties"]
+            favorecido:
+              type: array
+              items:
+                type: string
+              example: ["Entidades Sem Fins Lucrativos"]
+            programa:
+              type: array
+              items:
+                type: string
+              example: ["Atencao basica em saude"]
+            order_by:
+              type: string
+              example: "Ano"
+            ascending:
+              type: string
+              example: "false"
+            group:
+              type: array
+              items:
+                type: string
+              example: ["Tipo de Favorecido", "Programa Orçamentário"]
+    responses:
+      200:
+        description: Lista de dados agregados com base nos filtros aplicados
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              Ano:
+                type: integer
+                example: 2022
+              UF:
+                type: string
+                example: "SP"
+              Função:
+                type: string
+                example: "Saúde"
+              Tipo:
+                type: string
+                example: "Constitucionais e Royalties"
+              Tipo de Favorecido:
+                type: string
+                example: "Entidades Sem Fins Lucrativos"
+              Programa Orçamentário:
+                type: string
+                example: "Atencao basica em saude"
+              Total Investido:
+                type: number
+                format: float
+                example: 1250000.75
+      500:
+        description: Erro ao carregar dados
+        schema:
+          type: object
+          properties:
+            erro:
+              type: string
+              example: "Dados não carregados"
+    """
+
+    df = current_app.config.get("df")
+    if df is None or df.empty:
+        return jsonify({"erro": "Dados não carregados"}), 500
+
+    params = request.json
+
+    resultado = filtrar_dataframe(df, params, ranking=True)
+    return resultado.to_json(orient="records", force_ascii=False)
+
 @data_bp.route("/mapa", methods=["POST"])
 def mapa_funcao_ano():
   """

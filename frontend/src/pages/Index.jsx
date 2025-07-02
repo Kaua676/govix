@@ -19,7 +19,7 @@ const Index = () => {
     order_by: "",
     programa: [],
     tipo: [],
-    uf: []
+    uf: ["MS"]
   };
 });
 
