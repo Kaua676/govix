@@ -230,6 +230,97 @@ const RecommendationsPanel = () => {
       action:
         "Lançar um programa de incentivos para a instalação de painéis solares em residências de baixa renda e prédios públicos, visando democratizar o acesso à energia limpa e reduzir a demanda sobre o sistema elétrico nacional.",
     },
+    {
+      "id": 21,
+      "title": "Oportunidade de Fomento à Cultura Nacional",
+      "description": "Com um investimento total de R$ 2,93 bilhões, a função Cultura, embora com orçamento modesto, é essencial para a identidade e economia criativa do país. Os recursos financiam a preservação do patrimônio e o fomento às artes. O investimento direcionado nesta área tem um alto potencial de retorno social e de geração de emprego e renda no setor criativo.",
+      "priority": "média",
+      "category": "Cultura",
+      "investment": "R$ 2.93 bilhões",
+      "action": "Criar um programa de editais focado na digitalização de acervos culturais e na promoção de artistas em plataformas digitais, ampliando o acesso da população à cultura e abrindo novos mercados para os criadores de conteúdo brasileiros."
+    },
+    {
+      "id": 22,
+      "title": "Foco no Desenvolvimento do Desporto e Lazer",
+      "description": "O repasse de R$ 2,52 bilhões para Desporto e Lazer apoia desde o esporte de alto rendimento até projetos sociais em comunidades. Este investimento promove saúde, inclusão social e pode revelar novos talentos. A otimização desses recursos pode ampliar significativamente o impacto positivo do esporte na vida dos cidadãos.",
+      "priority": "média",
+      "category": "Desporto e Lazer",
+      "investment": "R$ 2.52 bilhões",
+      "action": "Direcionar investimentos para a construção e reforma de infraestrutura esportiva em áreas de vulnerabilidade social, vinculando o uso desses espaços a programas educacionais e de saúde para crianças e adolescentes."
+    },
+    {
+      "id": 23,
+      "title": "Atenção à Organização Agrária",
+      "description": "A função Organização Agrária, com um investimento de R$ 2,05 bilhões, é crucial para a política de reforma agrária e a regularização de terras no país. A correta aplicação desses recursos pode diminuir conflitos no campo, promover a justiça social e aumentar a produtividade da agricultura familiar, garantindo a posse da terra a quem nela trabalha.",
+      "priority": "alta",
+      "category": "Organização Agrária",
+      "investment": "R$ 2.05 bilhões",
+      "action": "Acelerar os processos de demarcação e regularização de terras por meio da digitalização de processos e do uso de geotecnologia, garantindo segurança jurídica para assentados e comunidades tradicionais."
+    },
+    {
+      "id": 24,
+      "title": "Oportunidade Estratégica em Relações Exteriores",
+      "description": "O investimento de R$ 1,89 bilhão em Relações Exteriores financia a diplomacia brasileira, a promoção comercial e a assistência a brasileiros no exterior. Este é um investimento estratégico na imagem e nos interesses do Brasil no mundo, sendo fundamental para a abertura de novos mercados e a atração de investimentos.",
+      "priority": "média",
+      "category": "Relações Exteriores",
+      "investment": "R$ 1.89 bilhão",
+      "action": "Intensificar a diplomacia comercial focada em setores de alto valor agregado, como tecnologia e economia verde, utilizando a rede de embaixadas para promover ativamente as empresas brasileiras e atrair parcerias estratégicas."
+    },
+    {
+      "id": 25,
+      "title": "Fomento ao Setor de Comércio e Serviços",
+      "description": "Com um aporte de R$ 1,73 bilhão, a função Comércio e Serviços visa apoiar o setor que mais emprega no Brasil. O investimento pode impulsionar a formalização de negócios, a inovação e a competitividade de micro e pequenas empresas, fortalecendo a economia local e nacional.",
+      "priority": "média",
+      "category": "Comércio e Serviços",
+      "investment": "R$ 1.73 bilhão",
+      "action": "Lançar uma linha de microcrédito digital e desburocratizada para microempreendedores individuais (MEIs) e pequenas empresas, focada em capital de giro e investimento em marketing digital para ampliar suas vendas."
+    },
+    {
+      "id": 26,
+      "title": "Necessidade de Investimento em Habitação",
+      "description": "O investimento de R$ 1,06 bilhão na função Habitação parece baixo frente ao enorme déficit habitacional do país. Esses recursos são essenciais para financiar moradias populares e melhorar as condições de vida nas cidades. A ampliação e otimização deste orçamento é um ponto crítico para o desenvolvimento social.",
+      "priority": "alta",
+      "category": "Habitação",
+      "investment": "R$ 1.06 bilhão",
+      "action": "Estruturar um fundo garantidor para viabilizar parcerias com o setor privado na construção de habitações de interesse social, com foco em projetos que integrem moradia, saneamento e transporte público em áreas urbanas."
+    },
+    {
+      "id": 27,
+      "title": "Modernização das Comunicações",
+      "description": "O repasse de R$ 513,49 milhões para a área de Comunicações é fundamental para a regulação do setor e para projetos de inclusão digital. Em um mundo cada vez mais conectado, este investimento estratégico pode ajudar a diminuir a exclusão digital e a garantir o acesso à informação para todos os brasileiros.",
+      "priority": "média",
+      "category": "Comunicações",
+      "investment": "R$ 513.49 milhões",
+      "action": "Criar e financiar um programa nacional de expansão da infraestrutura de fibra óptica para municípios do interior com baixo índice de conectividade, em parceria com provedores locais para garantir a sustentabilidade do serviço."
+    },
+    {
+      "id": 28,
+      "title": "Atenção ao Sistema Essencial à Justiça",
+      "description": "O investimento de R$ 325,18 milhões na categoria Essencial à Justiça, que engloba o Ministério Público e a Defensoria Pública, é vital para o equilíbrio do sistema judiciário. O fortalecimento da Defensoria Pública, em particular, é crucial para garantir que cidadãos de baixa renda tenham seu direito de defesa assegurado.",
+      "priority": "alta",
+      "category": "Essencial à Justiça",
+      "investment": "R$ 325.18 milhões",
+      "action": "Alocar um percentual maior deste orçamento para a expansão e estruturação das Defensorias Públicas nos estados, visando ampliar o número de comarcas atendidas e reduzir o tempo de espera por assistência jurídica gratuita."
+    },
+    {
+      "id": 29,
+      "title": "Sustentabilidade dos Recursos Hídricos",
+      "description": "O montante de R$ 260,35 milhões para Recursos Hídricos financia a gestão de bacias hidrográficas e a segurança hídrica. Diante das mudanças climáticas, este investimento, embora pequeno, é estratégico para garantir o abastecimento de água para consumo, agricultura e indústria no futuro.",
+      "priority": "média",
+      "category": "Recursos Hídricos",
+      "investment": "R$ 260.35 milhões",
+      "action": "Focar os investimentos na revitalização de nascentes e matas ciliares em bacias hidrográficas críticas, além de incentivar a adoção de tecnologias de reuso de água na indústria e na agricultura para diminuir a pressão sobre os mananciais."
+    },
+    {
+      "id": 30,
+      "title": "Foco em Reserva de Contingência",
+      "description": "A alocação de R$ 4,50 bilhões na Reserva de Contingência representa um instrumento para cobrir gastos imprevistos, como desastres naturais ou crises fiscais. A gestão transparente e criteriosa dessa reserva é fundamental para a estabilidade e a capacidade de resposta do governo a emergências.",
+      "priority": "alta",
+      "category": "Reserva de Contingência",
+      "investment": "R$ 4.50 bilhões",
+      "action": "Estabelecer critérios técnicos e transparentes para o uso da Reserva de Contingência, com a obrigação de relatórios detalhados ao Congresso e à sociedade sobre a aplicação de cada recurso liberado, garantindo que seu uso seja estritamente emergencial."
+    }
+
   ];
 
   const getInitialCards = () => strategicRecommendations.slice(0, 5);
