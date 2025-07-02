@@ -54,34 +54,35 @@ const RegionalMetrics = ({ filters }) => {
       const total = valores.reduce((a, b) => a + b, 0);
       const media = total / periodos.length;
 
-      // Cálculo de desvio padrão simples
-      const variancia =
-        valores.reduce((acc, v) => acc + Math.pow(v - media, 2), 0) /
-        valores.length;
-      const desvio = Math.sqrt(variancia);
+      let desvio = null;
+      if (periodos.length > 1) {
+        const variancia =
+          valores.reduce((acc, v) => acc + Math.pow(v - media, 2), 0) /
+          valores.length;
+        desvio = Math.sqrt(variancia);
+      }
 
       valoresTotais[uf] = total;
       valoresMedios[uf] = media;
-      desvios[uf] = desvio;
+      if (desvio !== null) desvios[uf] = desvio;
     }
 
-    // UF com maior total investido
     const lider = Object.entries(valoresTotais).reduce(
       (acc, [uf, valor]) => (valor > acc.valor ? { nome: uf, valor } : acc),
       { nome: "", valor: 0 }
     );
 
-    // UF com maior média mensal
     const media = Object.entries(valoresMedios).reduce(
       (acc, [uf, valor]) => (valor > acc.valor ? { nome: uf, valor } : acc),
       { nome: "", valor: 0 }
     );
 
-    // UF com menor desvio padrão
-    const estabilidade = Object.entries(desvios).reduce(
-      (acc, [uf, valor]) => (valor < acc.valor ? { nome: uf, valor } : acc),
-      { nome: "", valor: Infinity }
-    );
+    const estabilidade = Object.entries(desvios).length
+      ? Object.entries(desvios).reduce(
+          (acc, [uf, valor]) => (valor < acc.valor ? { nome: uf, valor } : acc),
+          { nome: "", valor: Infinity }
+        )
+      : { nome: "-", valor: null };
 
     return { lider, media, estabilidade };
   };
@@ -94,12 +95,12 @@ const RegionalMetrics = ({ filters }) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-      {/* Região Líder */}
+      {/* Estado Líder */}
       <div
         className="text-white p-4 rounded-lg"
-        style={{ backgroundColor: "#0BC0D3" }}
+        style={{ backgroundColor: "#D34AF4" }}
       >
-        <div className="text-sm opacity-90">Região Líder</div>
+        <div className="text-sm opacity-90">Estado Líder</div>
         <div className="text-2xl font-bold">{lider.nome || "-"}</div>
         <div className="text-sm opacity-90">
           {formatCurrency(lider.valor || 0)}
@@ -112,7 +113,7 @@ const RegionalMetrics = ({ filters }) => {
       {/* Maior Aporte Médio por Mês */}
       <div
         className="text-white p-4 rounded-lg"
-        style={{ backgroundColor: "#F59E0B" }}
+        style={{ backgroundColor: "#0BC0D3" }}
       >
         <div className="text-sm opacity-90">Maior Aporte Médio</div>
         <div className="text-2xl font-bold">{media.nome || "-"}</div>
@@ -124,18 +125,22 @@ const RegionalMetrics = ({ filters }) => {
         </div>
       </div>
 
-      {/* Região Mais Estável */}
+      {/* Estado Mais Estável */}
       <div
         className="text-white p-4 rounded-lg"
-        style={{ backgroundColor: "#10B981" }}
+        style={{ backgroundColor: "#FC671D" }}
       >
-        <div className="text-sm opacity-90">Região Mais Estável</div>
+        <div className="text-sm opacity-90">Estado Mais Estável</div>
         <div className="text-2xl font-bold">{estabilidade.nome || "-"}</div>
         <div className="text-sm opacity-90">
-          Desvio: {estabilidade.valor.toFixed(2)}
+          {estabilidade.valor != null
+            ? `± ${formatCurrency(estabilidade.valor)}`
+            : "N/A"}
         </div>
         <div className="text-xs mt-1 opacity-80">
-          UF com distribuição de investimento mais constante ao longo dos meses.
+          {estabilidade.valor != null
+            ? "UF com distribuição de investimento mais constante ao longo dos meses."
+            : "É necessário mais de um mês para calcular a estabilidade."}
         </div>
       </div>
     </div>
