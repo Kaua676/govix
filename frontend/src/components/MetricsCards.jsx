@@ -23,7 +23,6 @@ const MetricsCards = ({ filters }) => {
 
   
   useEffect(() => {
-  // Primeiro busca a última atualização
   api
     .get("/ultima-atualizacao")
     .then((res) => {
@@ -32,7 +31,6 @@ const MetricsCards = ({ filters }) => {
         ? data_modificacao.split("-").reverse().join("/")
         : "Data indisponível";
 
-      // Depois, chama o filtro-mensal
       api
         .post("filtro-mensal", filters, {
           headers: {
@@ -85,15 +83,14 @@ const MetricsCards = ({ filters }) => {
             },
           ];
 
-          console.log("✅ Atualizando métricas com:", novasMetricas);
           setMetrics(novasMetricas);
         })
         .catch((error) => {
-          console.error("❌ Erro ao carregar métricas:", error);
+          console.error("Erro ao carregar métricas:", error);
         });
     })
     .catch((err) => {
-      console.error("❌ Erro ao buscar data de atualização:", err);
+      console.error("Erro ao buscar data de atualização:", err);
     });
 }, [filters]);
     
