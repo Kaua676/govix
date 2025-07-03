@@ -10,7 +10,7 @@ const Index = () => {
   const [filters, setFilters] = useState(() => {
   const stored = localStorage.getItem("filtros");
   return stored ? JSON.parse(stored) : {
-    ascending: "true",
+    ascending: "false",
     data_fim: "2025-12",
     data_inicio: "2025-01",
     favorecido: [],
@@ -19,7 +19,7 @@ const Index = () => {
     order_by: "",
     programa: [],
     tipo: [],
-    uf: ["MS"]
+    uf: ["AC"]
   };
 });
 
@@ -73,8 +73,6 @@ const Index = () => {
                   }`}
               >
                 <BarChart
-                  filtros={filters}
-                  setFiltros={setFilters}
                   className="w-4 h-4"
                 />
                 <span>Analytics</span>

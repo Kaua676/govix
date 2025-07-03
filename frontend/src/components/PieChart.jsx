@@ -51,7 +51,6 @@ const PieChart = ({ filters }) => {
         api.post("filtro-anual", filters)
             .then((response) => {
                 const data = response.data;
-                console.log(data)
                 const totaisPorFuncao = {};
 
                 data.forEach((item) => {

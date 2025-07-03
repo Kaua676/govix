@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 const FilterPanel = ({ filters, onFiltersChange }) => {
-  // Lista de categorias com nome e cor
   const categories = [
     { id: "Administração", label: "Administração", color: "bg-[#2563eb] text-white" },
     { id: "Agricultura", label: "Agricultura", color: "bg-[#16a34a] text-white" },
@@ -32,7 +31,6 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
   ];
 
 
-  // Lista de todos os estados do Brasil
   const states = [
     "AC",
     "AL",
@@ -68,19 +66,6 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
     "Legais, Voluntárias e Específicas",
   ];
 
-  const favorecidos = [
-    "Administração Pública",
-    "Administração Pública Estadual ou do Distrito Federal",
-    "Administração Pública Federal",
-    "Administração Pública Municipal",
-    "Agentes Intermediários",
-    "Entidades Empresariais Privadas",
-    "Entidades Sem Fins Lucrativos",
-    "Fundo Público",
-    "Organizações Internacionais",
-    "Sem Informação",
-  ];
-
   const orderByOptions = ["Ano", "UF"];
   const groupByOptions = ["Tipo de Favorecido", "Programa Orçamentário"];
   const [localPeriodStart, setLocalPeriodStart] = useState(
@@ -93,12 +78,9 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
     filters.funcao || [],
   );
   const [selectedStates, setSelectedStates] = useState(filters.uf || []);
-  const [selectedTipo, setSelectedTipo] = useState(filters.tipo || "");
-  const [selectedFavorecido, setSelectedFavorecido] = useState(
-    filters.favorecido || "",
-  );
+  const [selectedTipo, setSelectedTipo] = useState(filters.tipo || []);
   const [selectedOrderBy, setSelectedOrderBy] = useState(filters.order || "");
-  const [selectedGroupBy, setSelectedGroupBy] = useState(filters.group || "");
+  const [selectedGroupBy, setSelectedGroupBy] = useState(filters.group || []);
   const regex = /^\d{4}-(0[1-9]|1[0-2])$/;
 
   const handleClick = () => {
@@ -147,11 +129,7 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
   }
 
   function handleTipoChange(value) {
-    setSelectedTipo(value);
-  }
-
-  function handleFavorecidoChange(value) {
-    setSelectedFavorecido(value);
+    setSelectedTipo(value != "" ? [value] : []);
   }
 
   function handleOrderByChange(value) {
@@ -159,18 +137,17 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
   }
 
   function handleGroupByChange(value) {
-    setSelectedGroupBy([value]);
+    setSelectedGroupBy(value != "" ? [value] : []);
   }
 
   function clearFilters() {
     setLocalPeriodStart("2025-01");
     setLocalPeriodEnd("2025-12");
     setSelectedCategories([]);
-    setSelectedStates([""]);
-    setSelectedTipo("");
-    setSelectedFavorecido([]);
+    setSelectedStates([]);
+    setSelectedTipo([]);
     setSelectedOrderBy("");
-    setSelectedGroupBy("");
+    setSelectedGroupBy([]);
     onFiltersChange({
       ascending: "true",
       data_fim: "2025-12",
@@ -184,13 +161,20 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
       uf: [],
     });
   }
+  const clearFiltersState = () => {
+    setSelectedStates([]);
+  };
+  const clearFiltersCategories = () => {
+    setSelectedCategories([]);
+  };
+
 
   function handleApplyFilters() {
     onFiltersChange({
-      ascending: "true",
+      ascending: "false",
       data_fim: localPeriodEnd,
       data_inicio: localPeriodStart,
-      favorecido: selectedFavorecido,
+      favorecido: [],
       funcao: selectedCategories,
       group: selectedGroupBy,
       order_by: selectedOrderBy,
@@ -254,33 +238,52 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
       <hr className="border-slate-200" />
 
       {/* Categorias */}
-      <div className="space-y-2 max-h-44 overflow-y-auto pr-1">
-        <label className="text-sm font-semibold text-slate-700">
-          Categorias
-        </label>
-        {categories.map((cat) => (
-          <div key={cat.id} className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id={cat.id}
-              checked={selectedCategories.includes(cat.id)}
-              onChange={(e) =>
-                handleCategoryChange(cat.id, e.target.checked)}
-            />
-            <label htmlFor={cat.id} className="text-sm cursor-pointer">
-              <span className={`inline-block px-2 py-1 rounded ${cat.color}`}>
-                {cat.label}
-              </span>
-            </label>
-          </div>
-        ))}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold text-slate-700">
+            Categorias
+          </label>
+          <button
+            onClick={clearFiltersCategories}
+            className="text-sm text-slate-500 hover:text-red-500 px-2"
+          >
+            ×
+          </button>
+        </div>
+        <div className="max-h-44 overflow-y-auto pr-1 space-y-2">
+          {categories.map((cat) => (
+            <div key={cat.id} className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id={cat.id}
+                checked={selectedCategories.includes(cat.id)}
+                onChange={(e) =>
+                  handleCategoryChange(cat.id, e.target.checked)}
+              />
+              <label htmlFor={cat.id} className="text-sm cursor-pointer">
+                <span className={`inline-block px-2 py-1 rounded ${cat.color}`}>
+                  {cat.label}
+                </span>
+              </label>
+            </div>
+          ))}
+        </div>
       </div>
+
 
       <hr className="border-slate-200" />
 
       {/* Estados */}
       <div className="space-y-3">
-        <label className="text-sm font-semibold text-slate-700">Estados</label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-semibold text-slate-700">Estados</label>
+          <button
+            onClick={clearFiltersState}
+            className="text-sm text-slate-500 hover:text-red-500 px-2"
+          >
+            ×
+          </button>
+        </div>
         <div className="space-y-2 max-h-44 overflow-y-auto">
           {states.map((estado) => (
             <div key={estado} className="flex items-center space-x-2">
@@ -300,33 +303,6 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
       </div>
 
       <hr className="border-slate-200" />
-
-      {/* Favorecido */}
-      <div className="space-y-2 max-h-44 overflow-y-auto pr-1">
-        <label className="text-sm font-semibold text-slate-700">
-          Favorecido
-        </label>
-        {favorecidos.map((fav) => (
-          <div key={fav} className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id={fav}
-              checked={selectedFavorecido.includes(fav)}
-              onChange={(e) => {
-                const updated = e.target.checked
-                  ? [...selectedFavorecido, fav]
-                  : selectedFavorecido.filter((item) =>
-                    item !== fav
-                  );
-                setSelectedFavorecido(updated);
-              }}
-            />
-            <label htmlFor={fav} className="text-sm cursor-pointer">
-              {fav}
-            </label>
-          </div>
-        ))}
-      </div>
 
       {/* Tipo de Transferência */}
       <div className="space-y-2">

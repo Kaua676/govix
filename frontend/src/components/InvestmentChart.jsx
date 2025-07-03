@@ -119,9 +119,7 @@ const InvestmentChart = ({ filters }) => {
             </button>
           </div>
         </div>
-        <div className="aspect-square max-h-[500px] mx-auto">
-          {renderChart()}
-        </div>
+        <div className="mx-auto">{renderChart()}</div>
       </div>
 
       {/* Tabela */}
@@ -135,26 +133,28 @@ const InvestmentChart = ({ filters }) => {
             <table className="w-full table-auto text-sm">
               <thead>
                 <tr className="bg-slate-100">
-                  <th className="border px-3 py-2 text-left">Ano</th>
-                  <th className="border px-3 py-2 text-left">Função</th>
-                  <th className="border px-3 py-2 text-left">Estado (UF)</th>
-                  <th className="border px-3 py-2 text-right">
-                    Total Investido
-                  </th>
+                  {tableData.length > 0 &&
+                    Object.keys(tableData[0]).map((header) => (
+                      <th key={header} className="border px-3 py-2 text-left">
+                        {header}
+                      </th>
+                    ))}
                 </tr>
               </thead>
               <tbody>
                 {tableData.map((row, idx) => (
                   <tr key={idx} className="odd:bg-white even:bg-slate-50">
-                    <td className="border px-3 py-2">{row.Ano}</td>
-                    <td className="border px-3 py-2">{row.Função}</td>
-                    <td className="border px-3 py-2">{row.UF}</td>
-                    <td className="border px-3 py-2 text-right">
-                      {formatCurrency(row["Total Investido"] || 0)}
-                    </td>
+                    {Object.keys(tableData[0]).map((key) => (
+                      <td key={key} className={`border px-3 py-2 ${typeof row[key] === "number" ? "text-right" : "text-left"}`}>
+                        {key === "Total Investido"
+                          ? formatCurrency(row[key] || 0)
+                          : row[key]}
+                      </td>
+                    ))}
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
         )}

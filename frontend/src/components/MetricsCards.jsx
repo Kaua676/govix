@@ -19,7 +19,6 @@ const MetricsCards = ({ filters }) => {
     { title: "Última Atualização", value: "...", icon: Calendar },
   ]);
 
-  // Log quando as métricas forem atualizadas
   useEffect(() => {}, [metrics]);
 
   
@@ -101,7 +100,7 @@ const MetricsCards = ({ filters }) => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {metrics.map((metric, index) => {
+        {metrics.map((metric) => {
           const IconComponent = metric.icon;
           const trendColor = metric.trend === "up"
             ? "text-green-600"
