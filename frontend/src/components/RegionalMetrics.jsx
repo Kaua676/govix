@@ -17,9 +17,10 @@ const RegionalMetrics = ({ filters }) => {
   useEffect(() => {
     setLoading(true);
     setErro(null);
+    const filtersHeat = {...filters, order_by: filters.order_by === "Ano" ? "" : filters.order_by}
 
     api
-      .post("/filtro-mensal", filters)
+      .post("/filtro-mensal", filtersHeat)
       .then((res) => {
         const array = Array.isArray(res.data) ? res.data : [res.data];
         setDados(array);
