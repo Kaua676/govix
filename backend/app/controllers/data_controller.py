@@ -5,6 +5,7 @@ import plotly.io as pio
 import plotly.graph_objects as go
 import plotly.express as px
 from services.filter import filtrar_dataframe
+from services.dateUpdate import arquivo_recente
 
 pd.options.display.float_format = '{:,.2f}'.format
 
@@ -550,8 +551,58 @@ def mapa_funcao_ano():
       margin={"r":0, "t":40, "l":0, "b":0}
   )
   
-  # fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2000
-
-  # fig.show()
-
   return pio.to_json(fig)
+
+@data_bp.route("/ultima-atualizacao", methods=["GET"])
+def ultima_atualizacao():
+    """
+    Retorna o nome do arquivo mais recente e sua data de modificação
+    ---
+    tags:
+      - Metadados
+    summary: Última atualização dos dados transferidos
+    responses:
+      200:
+        description: Nome do arquivo, data da última modificação e a hora da última modificação
+        schema:
+          type: object
+          properties:
+            nome_arquivo:
+              type: string
+              example: "transferencias_2024.csv"
+            data_modificacao:
+              type: string
+              example: "2025-07-01"
+            hora_modificao:
+              type: string
+              example: "18:30:00"
+      404:
+        description: Nenhum arquivo encontrado
+        schema:
+          type: object
+          properties:
+            erro:
+              type: string
+              example: "Nenhum arquivo encontrado"
+      500:
+        description: Erro interno
+        schema:
+          type: object
+          properties:
+            erro:
+              type: string
+              example: "Erro interno inesperado"
+    """
+    try:
+        nome, data_modificacao, hora_modificacao = arquivo_recente()
+        if nome is None:
+            return jsonify({"erro": "Nenhum arquivo encontrado"}), 404
+
+        return jsonify({
+            "nome_arquivo": nome,
+            "data_modificacao": data_modificacao,
+            "hora_modificacao": hora_modificacao
+        }), 200
+
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
