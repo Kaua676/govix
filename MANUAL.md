@@ -21,7 +21,7 @@ Este manual descreve como executar e utilizar a aplicação **Govix**, uma plata
    pip install -r requirements.txt
    python app/main.py
    ```
-   O backend será iniciado em `http://localhost:5000` e a documentação automática via Swagger ficará disponível em `http://localhost:5000/apidocs`.
+   O backend será iniciado em `http://localhost:5000` e a documentação automática via Swagger ficará disponível em `http://localhost:5000/apidocs` com roteamento automático do index para ela.
 3. Em outro terminal, configure o frontend:
    ```bash
    cd frontend
@@ -42,10 +42,11 @@ Este manual descreve como executar e utilizar a aplicação **Govix**, uma plata
 
 ## API
 
-A API do Govix IA fornece três rotas principais, todas acessíveis sob `/api`:
+A API do Govix IA fornece quatro rotas principais, todas acessíveis sob `/api`:
 
 - `POST /filtro-mensal` – retorna totais mensais de investimento aplicando os filtros enviados no corpo da requisição.
 - `POST /filtro-anual` – agrega os dados por ano com base nos mesmos filtros.
+- `POST /filtro-ranking` - Produz o JSON e somatória dos dados por cada função das UFs selecionadas, ordenando e fornencendo uma visualização pré fixada de ranking.
 - `POST /mapa` – produz o JSON de um gráfico Plotly com o mapa de calor dos investimentos por estado.
 
 ### Exemplo de Payload
@@ -70,6 +71,7 @@ A resposta será um array de objetos contendo as colunas agrupadas e o campo `To
 - Os arquivos CSV utilizados ficam em `backend/data/recursos_transferidos`. Para atualizar ou adicionar novos anos, coloque os arquivos seguindo o mesmo formato.
 - Configure a variável `VITE_API_URL` no frontend caso execute o backend em outra porta ou servidor.
 - Utilize a documentação Swagger para explorar todos os parâmetros aceitos pela API.
+- Ao tentar filtrar todos os estados com todas as funções pode gerar um travamento na página de barras devido aos agrupamentos, mas ele ainda sim carrega porém é difícil de visualizar as informações estratégicas.
 
 ---
 
