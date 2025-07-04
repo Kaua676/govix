@@ -92,6 +92,10 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
       alert("Data início inválida\nModelo: YYYY-MM");
       return;
     }
+    if(localPeriodEnd < localPeriodStart) {
+      alert("Data fim deve ser maior que a data início!");
+      return;
+    }
     handleApplyFilters();
   };
 
@@ -333,7 +337,7 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
           onChange={(e) => handleOrderByChange(e.target.value)}
           className="w-full border border-slate-300 rounded px-2 py-1 text-sm"
         >
-          <option value="">Nenhum</option>
+          <option value="Total Investido">Total Investido</option>
           {orderByOptions.map((opt) => (
             <option key={opt} value={opt}>
               {opt}

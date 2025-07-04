@@ -25,8 +25,10 @@ const BrazilHeatMap = ({ filters }) => {
     setLoading(true);
     setError(null);
 
+    const filtersHeat = {...filters, order_by: filters.order_by === "Ano" ? "" : filters.order_by}
+
     api
-      .post("/filtro-ranking", filters)
+      .post("/filtro-ranking", filtersHeat)
       .then((response) => {
         const data = response.data;
         const dataArray = Array.isArray(data) ? data : [data];

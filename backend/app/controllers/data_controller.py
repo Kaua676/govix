@@ -446,12 +446,13 @@ def mapa_funcao_ano():
   data_inicio = pd.to_datetime(params["data_inicio"], format="%Y-%m")
   data_fim = pd.to_datetime(params["data_fim"], format="%Y-%m")
   funcoes = params.get("funcao")
+  tipo = params.get("tipo")
   
   map_params = {
     "data_inicio": data_inicio,
     "data_fim": data_fim,
     "uf": [],
-    "tipo": [],
+    "tipo": tipo,
     "funcao": funcoes,
     "favorecido": [],
     "programa": [],

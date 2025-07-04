@@ -129,13 +129,13 @@ const InvestmentChart = ({ filters }) => {
         ) : error ? (
           <div className="text-red-600">{error}</div>
         ) : (
-          <div style={{ maxHeight: "600px", overflowY: "auto" }}>
+          <div style={{ maxHeight: "600px", overflowY: "auto" }} >
             <table className="w-full table-auto text-sm">
               <thead>
-                <tr className="bg-slate-100">
+                <tr className="bg-slate-100 hover:bg-slate-50">
                   {tableData.length > 0 &&
                     Object.keys(tableData[0]).map((header) => (
-                      <th key={header} className="border px-3 py-2 text-left">
+                      <th key={header} className="border-b border-slate-300 bg-slate-100 px-3 py-2 text-center">
                         {header}
                       </th>
                     ))}
@@ -143,9 +143,9 @@ const InvestmentChart = ({ filters }) => {
               </thead>
               <tbody>
                 {tableData.map((row, idx) => (
-                  <tr key={idx} className="odd:bg-white even:bg-slate-50">
+                  <tr key={idx} className="odd:bg-white even:bg-slate-50 hover:bg-blue-100">
                     {Object.keys(tableData[0]).map((key) => (
-                      <td key={key} className={`border px-3 py-2 ${typeof row[key] === "number" ? "text-right" : "text-left"}`}>
+                      <td key={key} className={`border-b border-slate-200 px-3 py-2 ${typeof row[key] === "number" ? "text-right" : "text-left"}`}>
                         {key === "Total Investido"
                           ? formatCurrency(row[key] || 0)
                           : row[key]}
