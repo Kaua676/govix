@@ -135,7 +135,7 @@ const BarChart = ({ filters }) => {
         display: false,
       },
       title: {
-        display: true,
+        display: false,
         text: "Investimento Empilhado por UF e Função - Mês a Mês",
         font: {
           size: 16,
