@@ -54,13 +54,19 @@ const InvestmentMetrics = ({ filters }) => {
   };
 
   const calcularMetricas = () => {
-    if (!data.length) return { lider: {}, crescimento: {}, projecao: {} };
+    if (!data.length) {
+      return {
+        lider: { nome: "-", valor: 0 },
+        crescimento: { nome: "-", taxa: 0 },
+        projecao: { nome: "-", media: 0 },
+      };
+    }
 
     const porFuncao = agruparPorFuncao(data);
     const categoriaLider = Object.entries(porFuncao).reduce(
       (max, [funcao, valor]) =>
         valor > max.valor ? { nome: funcao, valor } : max,
-      { nome: "", valor: 0 }
+      { nome: "-", valor: 0 }
     );
 
     const agrupadoPorMes = {};
@@ -68,21 +74,25 @@ const InvestmentMetrics = ({ filters }) => {
       const mesOuAno = item["Mês/Ano"] || item["Ano"];
       const funcao = item["Função"];
       const total = item["Total Investido"];
-
       if (!mesOuAno || !funcao || total == null) return;
-
       agrupadoPorMes[mesOuAno] ??= {};
       agrupadoPorMes[mesOuAno][funcao] =
         (agrupadoPorMes[mesOuAno][funcao] || 0) + total;
     });
 
     const mesesOrdenados = Object.keys(agrupadoPorMes).sort();
-    if (mesesOrdenados.length < 2) return { lider: categoriaLider };
+    if (mesesOrdenados.length < 2) {
+      return {
+        lider: categoriaLider,
+        crescimento: { nome: "-", taxa: 0 },
+        projecao: { nome: "-", media: 0 },
+      };
+    }
 
-    const ultimo = agrupadoPorMes[mesesOrdenados[mesesOrdenados.length - 1]];
-    const penultimo = agrupadoPorMes[mesesOrdenados[mesesOrdenados.length - 2]];
+    const ultimo = agrupadoPorMes[mesesOrdenados.at(-1)];
+    const penultimo = agrupadoPorMes[mesesOrdenados.at(-2)];
 
-    let maiorCrescimento = { nome: "", taxa: -Infinity };
+    let maiorCrescimento = { nome: "-", taxa: -Infinity };
     for (const funcao in ultimo) {
       if (penultimo[funcao]) {
         const taxa =
@@ -92,9 +102,11 @@ const InvestmentMetrics = ({ filters }) => {
         }
       }
     }
+    if (maiorCrescimento.taxa === -Infinity)
+      maiorCrescimento = { nome: "-", taxa: 0 };
 
     const ultimosMeses = mesesOrdenados.slice(-4);
-    let maiorProjecao = { nome: "", media: -Infinity };
+    let maiorProjecao = { nome: "-", media: -Infinity };
     const crescimentosPorFuncao = {};
 
     for (let i = 1; i < ultimosMeses.length; i++) {
@@ -116,6 +128,8 @@ const InvestmentMetrics = ({ filters }) => {
         maiorProjecao = { nome: funcao, media };
       }
     }
+    if (maiorProjecao.media === -Infinity)
+      maiorProjecao = { nome: "-", media: 0 };
 
     return {
       lider: categoriaLider,
@@ -124,25 +138,34 @@ const InvestmentMetrics = ({ filters }) => {
     };
   };
 
-  const { lider, crescimento, projecao } = calcularMetricas();
+  const {
+    lider = { nome: "-", valor: 0 },
+    crescimento = { nome: "-", taxa: 0 },
+    projecao = { nome: "-", media: 0 },
+  } = calcularMetricas();
 
   if (loading)
     return <p className="text-sm text-slate-600">Carregando métricas...</p>;
-  if (error) return <p className="text-sm text-red-600">Erro: {error}</p>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+      {/* Função com Maior Investimento */}
       <div
         className="text-white p-4 rounded-lg"
         style={{ backgroundColor: "#0BC0D3" }}
       >
         <div className="text-sm opacity-90">Função com Maior Investimento</div>
-        <div className="text-2xl font-bold">{lider.nome || "-"}</div>
+        <div className="text-2xl font-bold">{lider.nome}</div>
         <div className="text-sm opacity-90">
-          {formatCurrencyAbreviado(lider.valor || 0)}
+          {formatCurrencyAbreviado(lider.valor)}
+        </div>
+        <div className="text-xs mt-1 opacity-80">
+          Categoria funcional que recebeu o maior volume total de investimentos
+          no período.
         </div>
       </div>
 
+      {/* Maior Crescimento no Último Mês */}
       <div
         className="text-white p-4 rounded-lg"
         style={{ backgroundColor: "#D34AF4" }}
@@ -154,8 +177,12 @@ const InvestmentMetrics = ({ filters }) => {
         <div className="text-sm opacity-90">
           +{(crescimento.taxa ?? 0).toFixed(1)}%
         </div>
+        <div className="text-xs mt-1 opacity-80">
+          Função que teve o maior aumento percentual em relação ao mês anterior.
+        </div>
       </div>
 
+      {/* Tendência de Crescimento */}
       <div
         className="text-white p-4 rounded-lg"
         style={{ backgroundColor: "#FC671D" }}
@@ -164,6 +191,10 @@ const InvestmentMetrics = ({ filters }) => {
         <div className="text-2xl font-bold">{projecao.nome || "-"}</div>
         <div className="text-sm opacity-90">
           +{(projecao.media ?? 0).toFixed(1)}%
+        </div>
+        <div className="text-xs mt-1 opacity-80">
+          Função com crescimento mais consistente nos últimos meses, indicando
+          tendência positiva.
         </div>
       </div>
     </div>
