@@ -51,7 +51,7 @@ Este manual descreve como executar e utilizar a aplicação **Govix**, uma plata
 
 ## API
 
-A API do Govix IA fornece quatro rotas principais, todas acessíveis sob `/api`:
+A API do Govix IA fornece cinco rotas principais, todas acessíveis sob `/api`:
 
 - `POST /filtro-mensal` – retorna totais mensais de investimento aplicando os filtros enviados no corpo da requisição.
 - `POST /filtro-anual` – agrega os dados por ano com base nos mesmos filtros.
