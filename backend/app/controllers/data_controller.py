@@ -476,6 +476,8 @@ def mapa_funcao_ano():
           
   # Adicionar coluna com total geral
   resultado_pivot["Total Investido"] = resultado_pivot[funcoes].sum(axis=1)
+  
+  resultado_pivot = resultado_pivot.sort_values(by=["Ano", "UF"]).reset_index(drop=True)
 
   # Garantir que todas as funções existam como colunas (mesmo que vazias)
   for func in funcoes:
@@ -530,6 +532,8 @@ def mapa_funcao_ano():
   fig.data[0].hovertemplate = "%{text}<extra></extra>"
   
   fig.update_traces(hovertemplate="%{text}<extra></extra>")
+  
+  fig.frames = sorted(fig.frames, key=lambda x: int(x.name))
   
   for frame in fig.frames:
     # Acha o ano atual do frame

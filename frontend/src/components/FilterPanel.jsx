@@ -153,7 +153,7 @@ const FilterPanel = ({ filters, onFiltersChange }) => {
     setSelectedOrderBy("");
     setSelectedGroupBy([]);
     onFiltersChange({
-      ascending: "true",
+      ascending: "false",
       data_fim: "2025-12",
       data_inicio: "2025-01",
       favorecido: [],

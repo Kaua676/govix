@@ -16,7 +16,8 @@ const BrazilPlotlyHeatMap = ({filters}) => {
           setPlotData(data);
         })
         .catch((error) => {
-          setError(error.message);
+          console.log(error)
+          setError( error.code == "ERR_NETWORK" ? "Nenhum dado encontrado com os filtros selecionados!" : error.message);
         })
         .finally(() => {
           setLoading(false);
