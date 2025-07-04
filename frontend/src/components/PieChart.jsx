@@ -15,6 +15,8 @@ const PieChart = ({ filters }) => {
         labels: [],
         datasets: [{ data: [], backgroundColor: [] }],
     });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const coresFixas = {
         Administração: "#2563eb",
@@ -49,6 +51,7 @@ const PieChart = ({ filters }) => {
     };
 
     useEffect(() => {
+        setLoading(true);
         if (!filters?.data_inicio || !filters?.data_fim) return;
 
         api.post("filtro-anual", filters)
@@ -82,8 +85,10 @@ const PieChart = ({ filters }) => {
                 });
             })
             .catch((error) => {
+                setError(error.message)
                 console.error("Erro ao buscar dados do PieChart:", error);
-            });
+            })
+            .finally(() => setLoading(false))
     }, [filters]);
 
     const options = {
@@ -102,6 +107,11 @@ const PieChart = ({ filters }) => {
             },
         },
     };
+    console.log(pieData.datasets[0].data.length)
+
+    if (loading) return <p>Carregando dados...</p>;
+    if (error) return <p>Erro: {error}</p>;
+    if (pieData.datasets[0].data.length === 0) return <p>Nenhum dado encontrado</p>;
 
     return (
         <div style={{ height: "400px" }}>

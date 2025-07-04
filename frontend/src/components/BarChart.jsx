@@ -49,8 +49,11 @@ const ufLabelPlugin = {
 const BarChart = ({ filters }) => {
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
   const filterBar = { ...filters, order_by: "Data", ascending: "true" };
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    setLoading(true);
     api
       .post("filtro-mensal", filterBar)
       .then((response) => {
@@ -111,7 +114,13 @@ const BarChart = ({ filters }) => {
 
         setChartData({ labels: meses, datasets });
       })
-      .catch((err) => console.error("Erro ao buscar dados:", err));
+      .catch((err) => {
+        setError(error.message)
+        console.error("Erro ao buscar dados:", err)
+      })
+      .finally(() => {
+        setLoading(false);
+      })
   }, [filters]);
 
   const options = {
@@ -183,6 +192,10 @@ const BarChart = ({ filters }) => {
       },
     },
   };
+
+  if (loading) return <p>Carregando dados...</p>;
+  if (error) return <p>Erro: {error}</p>;
+  if (chartData.datasets.length === 0) return <p>Nenhum dado encontrado</p>;
 
   return (
     <div>

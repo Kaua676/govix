@@ -18,6 +18,8 @@ const RadarChart = ({ filters }) => {
     labels: [],
     datasets: [],
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const coresFixas = {
         Administração: "#2563eb",
@@ -52,6 +54,7 @@ const RadarChart = ({ filters }) => {
     };
 
   useEffect(() => {
+    setLoading(true);
     if (!filters?.data_inicio || !filters?.data_fim) return;
 
     api
@@ -104,8 +107,12 @@ const RadarChart = ({ filters }) => {
         });
       })
       .catch((error) => {
+        setError(error.message)
         console.error("Erro ao buscar dados do RadarChart:", error);
-      });
+      })
+      .finally(() => {
+        setLoading(false);
+      })
   }, [filters]);
 
   const options = {
@@ -147,6 +154,10 @@ const RadarChart = ({ filters }) => {
       },
     },
   };
+
+  if (loading) return <p>Carregando dados...</p>;
+  if (error) return <p>Erro: {error}</p>;
+  if (radarData.datasets.length === 0) return <p>Nenhum dado encontrado</p>;
 
   return (
     <div style={{ height: "500px" }}>

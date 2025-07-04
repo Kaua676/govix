@@ -128,6 +128,8 @@ const InvestmentChart = ({ filters }) => {
           <div>Carregando dados...</div>
         ) : error ? (
           <div className="text-red-600">{error}</div>
+        ) : tableData.length === 0 ? (
+          <div>Nenhum dado encontrado com os filtros selecionados!</div>
         ) : (
           <div style={{ maxHeight: "600px", overflowY: "auto" }} >
             <table className="w-full table-auto text-sm">
