@@ -15,6 +15,8 @@ const PieChart = ({ filters }) => {
         labels: [],
         datasets: [{ data: [], backgroundColor: [] }],
     });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const coresFixas = {
         Administração: "#2563eb",
@@ -30,11 +32,14 @@ const PieChart = ({ filters }) => {
         Educação: "#3b82f6",
         "Encargos especiais": "#a855f7",
         Energia: "#facc15",
+        "Essencial à justiça": "#5d6212",
         "Gestão ambiental": "#10b981",
         Habitação: "#06b6d4",
         Indústria: "#f87171",
+        Judiciária: "#3f62a0",
         Múltiplo: "#818cf8",
         "Organização agrária": "#65a30d",
+        "Previdência social": "#373a12",
         "Relações exteriores": "#4f46e5",
         Saneamento: "#2dd4bf",
         Saúde: "#ef4444",
@@ -46,12 +51,12 @@ const PieChart = ({ filters }) => {
     };
 
     useEffect(() => {
+        setLoading(true);
         if (!filters?.data_inicio || !filters?.data_fim) return;
 
         api.post("filtro-anual", filters)
             .then((response) => {
                 const data = response.data;
-                console.log(data)
                 const totaisPorFuncao = {};
 
                 data.forEach((item) => {
@@ -80,8 +85,10 @@ const PieChart = ({ filters }) => {
                 });
             })
             .catch((error) => {
+                setError(error.message)
                 console.error("Erro ao buscar dados do PieChart:", error);
-            });
+            })
+            .finally(() => setLoading(false))
     }, [filters]);
 
     const options = {
@@ -100,6 +107,11 @@ const PieChart = ({ filters }) => {
             },
         },
     };
+    console.log(pieData.datasets[0].data.length)
+
+    if (loading) return <p>Carregando dados...</p>;
+    if (error) return <p>Erro: {error}</p>;
+    if (pieData.datasets[0].data.length === 0) return <p>Nenhum dado encontrado</p>;
 
     return (
         <div style={{ height: "400px" }}>

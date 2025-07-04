@@ -9,13 +9,15 @@ const BrazilPlotlyHeatMap = ({filters}) => {
 
   const fetchMapData = async () => {
     setLoading(true);
-      api.post("mapa", filters)
+    const filtersHeat = {...filters, order_by: filters.order_by === "Ano" ? "" : filters.order_by}
+      api.post("mapa", filtersHeat)
         .then((response) => {
           const data = response.data
           setPlotData(data);
         })
         .catch((error) => {
-          setError(error.message);
+          console.log(error)
+          setError( error.code == "ERR_NETWORK" ? "Nenhum dado encontrado com os filtros selecionados!" : error.message);
         })
         .finally(() => {
           setLoading(false);

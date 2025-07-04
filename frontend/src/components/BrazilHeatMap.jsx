@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import api from "../services/api"; // axios configurado
+import api from "../services/api";
 import BrazilPlotlyHeatMap from "./BrazilPlotlyHeatMap.jsx";
+import RegionalMetrics from "./RegionalMetrics.jsx";
 
 const BrazilHeatMap = ({ filters }) => {
   const [ranking, setRanking] = useState([]);
@@ -24,7 +25,10 @@ const BrazilHeatMap = ({ filters }) => {
     setLoading(true);
     setError(null);
 
-    api.post("/filtro-anual", filters)
+    const filtersHeat = {...filters, order_by: filters.order_by === "Ano" ? "" : filters.order_by}
+
+    api
+      .post("/filtro-ranking", filtersHeat)
       .then((response) => {
         const data = response.data;
         const dataArray = Array.isArray(data) ? data : [data];
@@ -48,14 +52,16 @@ const BrazilHeatMap = ({ filters }) => {
   };
 
   const formatCurrency = (value) => {
-    if (value >= 1_000_000_000) return `R$ ${(value / 1_000_000_000).toFixed(1)}bi`;
+    if (value >= 1_000_000_000)
+      return `R$ ${(value / 1_000_000_000).toFixed(1)}bi`;
     if (value >= 1_000_000) return `R$ ${(value / 1_000_000).toFixed(1)}mi`;
     return `R$ ${value.toLocaleString("pt-BR")}`;
   };
 
-  const maxInvestment = ranking.length > 0
-    ? Math.max(...ranking.map((r) => r["Total Investido"]))
-    : 1;
+  const maxInvestment =
+    ranking.length > 0
+      ? Math.max(...ranking.map((r) => r["Total Investido"]))
+      : 1;
 
   if (loading) return <p>Carregando...</p>;
   if (error) return <p className="text-red-600">Erro: {error}</p>;
@@ -73,13 +79,7 @@ const BrazilHeatMap = ({ filters }) => {
 
         <div className="relative bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg p-8 min-h-96 flex items-center justify-center">
           <div className="text-center space-y-4 w-full">
-            <h3 className="text-xl font-bold text-slate-800">Mapa Interativo do Brasil</h3>
-            <BrazilPlotlyHeatMap
-              filters={filters}
-              // ranking={ranking}
-              // onSelectState={(uf) => setSelectedState(uf)}
-              // selectedState={selectedState}
-            />
+            <BrazilPlotlyHeatMap filters={filters} />
           </div>
         </div>
 
@@ -104,39 +104,50 @@ const BrazilHeatMap = ({ filters }) => {
         <h2 className="text-lg text-slate-800 font-semibold mb-4">
           Ranking por Estado e Função
         </h2>
-        <div className="space-y-3">
+        <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
           {ranking.length === 0 && <p>Nenhum dado encontrado.</p>}
-          {ranking.map((item, index) => {
-            const cor = getIntensityColor(item["Total Investido"], maxInvestment);
-            return (
-              <div
-                key={`${item.UF}-${item.Função}-${index}`}
-                className={`flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer ${
-                  selectedState === item.UF ? "ring-2 ring-blue-500" : ""
-                }`}
-                onClick={() => setSelectedState(selectedState === item.UF ? null : item.UF)}
-              >
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-lg font-bold text-slate-600">#{index + 1}</span>
-                    <div className={`w-4 h-4 rounded ${cor}`} />
+          {ranking
+            .sort((a, b) => b["Total Investido"] - a["Total Investido"])
+            .map((item, index) => {
+              const cor = getIntensityColor(
+                item["Total Investido"],
+                maxInvestment
+              );
+              return (
+                <div
+                  key={`${item.UF}-${item.Função}-${index}`}
+                  className={`flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer ${
+                    selectedState === item.UF ? "ring-2 ring-blue-500" : ""
+                  }`}
+                  onClick={() =>
+                    setSelectedState(selectedState === item.UF ? null : item.UF)
+                  }
+                >
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-lg font-bold text-slate-600">
+                        #{index + 1}
+                      </span>
+                      <div className={`w-4 h-4 rounded ${cor}`} />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-800">
+                        {item.UF}
+                      </h4>
+                      <p className="text-sm text-slate-600">{item.Função}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-slate-800">{item.UF}</h4>
-                    <p className="text-sm text-slate-600">{item.Função}</p>
+                  <div className="text-right">
+                    <div className="font-bold text-slate-800">
+                      {formatCurrency(item["Total Investido"] || 0)}
+                    </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="font-bold text-slate-800">
-                    {formatCurrency(item["Total Investido"] || 0)}
-                  </div>
-                  <div className="text-sm text-green-600">Ano: {item.Ano}</div>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
+      <RegionalMetrics filters={filters} />
     </div>
   );
 };

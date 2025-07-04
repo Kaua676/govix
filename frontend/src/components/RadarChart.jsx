@@ -18,37 +18,43 @@ const RadarChart = ({ filters }) => {
     labels: [],
     datasets: [],
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const coresFixas = {
-    Administração: "#2563eb",
-    Agricultura: "#16a34a",
-    "Assistência social": "#ec4899",
-    "Ciência e Tecnologia": "#8b5cf6",
-    Comunicações: "#0ea5e9",
-    "Comércio e serviços": "#f97316",
-    Cultura: "#e11d48",
-    "Defesa nacional": "#7c3aed",
-    "Desporto e lazer": "#22c55e",
-    "Direitos da cidadania": "#f43f5e",
-    Educação: "#3b82f6",
-    "Encargos especiais": "#a855f7",
-    Energia: "#facc15",
-    "Gestão ambiental": "#10b981",
-    Habitação: "#06b6d4",
-    Indústria: "#f87171",
-    Múltiplo: "#818cf8",
-    "Organização agrária": "#65a30d",
-    "Relações exteriores": "#4f46e5",
-    Saneamento: "#2dd4bf",
-    Saúde: "#ef4444",
-    "Segurança pública": "#eab308",
-    "Sem Informação": "#9ca3af",
-    Trabalho: "#db2777",
-    Transporte: "#fb923c",
-    Urbanismo: "#3f6212",
-  };
+        Administração: "#2563eb",
+        Agricultura: "#16a34a",
+        "Assistência social": "#ec4899",
+        "Ciência e Tecnologia": "#8b5cf6",
+        Comunicações: "#0ea5e9",
+        "Comércio e serviços": "#f97316",
+        Cultura: "#e11d48",
+        "Defesa nacional": "#7c3aed",
+        "Desporto e lazer": "#22c55e",
+        "Direitos da cidadania": "#f43f5e",
+        Educação: "#3b82f6",
+        "Encargos especiais": "#a855f7",
+        Energia: "#facc15",
+        "Essencial à justiça": "#5d6212",
+        "Gestão ambiental": "#10b981",
+        Habitação: "#06b6d4",
+        Indústria: "#f87171",
+        Judiciária: "#3f62a0",
+        Múltiplo: "#818cf8",
+        "Organização agrária": "#65a30d",
+        "Previdência social": "#373a12",
+        "Relações exteriores": "#4f46e5",
+        Saneamento: "#2dd4bf",
+        Saúde: "#ef4444",
+        "Segurança pública": "#eab308",
+        "Sem Informação": "#9ca3af",
+        Trabalho: "#db2777",
+        Transporte: "#fb923c",
+        Urbanismo: "#3f6212",
+    };
 
   useEffect(() => {
+    setLoading(true);
     if (!filters?.data_inicio || !filters?.data_fim) return;
 
     api
@@ -60,7 +66,6 @@ const RadarChart = ({ filters }) => {
         const funcoes = new Set();
         const dadosPorFuncao = {};
 
-        // Estrutura: { [funcao]: { [ano]: total } }
         data.forEach((item) => {
           const funcao = item["Função"];
           const ano = item["Ano"];
@@ -88,7 +93,7 @@ const RadarChart = ({ filters }) => {
           return {
             label: funcao,
             data: anosOrdenados.map((ano) => dadosPorFuncao[funcao][ano] || 0),
-            backgroundColor: cor + "33", // transparência no fundo
+            backgroundColor: cor + "33", 
             borderColor: cor,
             pointBackgroundColor: cor,
             borderWidth: 2,
@@ -102,8 +107,12 @@ const RadarChart = ({ filters }) => {
         });
       })
       .catch((error) => {
+        setError(error.message)
         console.error("Erro ao buscar dados do RadarChart:", error);
-      });
+      })
+      .finally(() => {
+        setLoading(false);
+      })
   }, [filters]);
 
   const options = {
@@ -120,13 +129,11 @@ const RadarChart = ({ filters }) => {
             size: 13, 
           },
         },
-        suggestedMin: 0,
         ticks: {
           callback: (value) => `R$ ${value / 1_000_000} mi`,
           font: {
             size: 11,
           },
-          stepSize: 1_000_000,
           maxTicksLimit: 3,
           
         },
@@ -147,6 +154,10 @@ const RadarChart = ({ filters }) => {
       },
     },
   };
+
+  if (loading) return <p>Carregando dados...</p>;
+  if (error) return <p>Erro: {error}</p>;
+  if (radarData.datasets.length === 0) return <p>Nenhum dado encontrado</p>;
 
   return (
     <div style={{ height: "500px" }}>

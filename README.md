@@ -4,7 +4,7 @@ Radar de Oportunidades Govtech
 
 ## 📌 Descrição
 
-**Govix IA** é uma aplicação web que analisa transferências públicas e fornece insights estratégicos para empresas que atuam no setor **GovTech**. A plataforma integra dados governamentais com visualizações inteligentes, mapa de calor e um painel de recomendações baseadas em IA.
+**Govix** é uma aplicação web que analisa transferências públicas e fornece insights estratégicos para empresas que atuam no setor **GovTech**. A plataforma integra dados governamentais com visualizações inteligentes, mapa de calor e um painel de recomendações baseadas em IA.
 
 ---
 
@@ -137,13 +137,39 @@ Verificar ao fazer a consulta com o filtro de função pois existem diversos e s
 
 | Nome                              | Função            |
 |-----------------------------------|-------------------|
-| Gabriel Gravena Barros            | Desenvolvimento   |
+| Gabriel Gravena Barros            | Desenvolvimento   | 
 | Henrique Oliveira Silva           | Desenvolvimento   |
 | Kauã Vicente Domingos             | Design            |
 | Rhyan Santiago Komm               | Desenvolvimento   |
 | Rodrigo Terra Costa               | Produto           |
 | Thiago Olszewski                  | Desenvolvimento   |
 | Willdanthê Amorim Alaman          | Produto           |
+
+<br/>
+
+<div style="display: flex; gap: 10px;">
+  <a href="https://github.com/oppsggbarros">
+    <img src="https://github.com/oppsggbarros.png" alt="Gabriel Gravena" style="border-radius: 50%; width: 60px; height: 60px; margin: 10%">
+  </a>
+  <a href="https://github.com/Holiveira090">
+    <img src="https://github.com/Holiveira090.png" alt="Henrique Oliveira" style="border-radius: 50%; width: 60px; height: 60px; margin: 10%">
+  </a>
+  <a href="https://github.com/Kaua676">
+    <img src="https://github.com/Kaua676.png" alt="Kauã Vicente" style="border-radius: 50%; width: 60px; height: 60px; margin: 10%">
+  </a>
+  <a href="https://github.com/RhyanSKomm">
+    <img src="https://github.com/RhyanSKomm.png" alt="Rhyan" style="border-radius: 50%; width: 60px; height: 60px; margin: 10%">
+  </a>
+  <a href="https://github.com/Rodrigo15511">
+    <img src="https://github.com/Rodrigo15511.png" alt="Rodrigo Terra" style="border-radius: 50%; width: 60px; height: 60px; margin: 10%">
+  </a>
+  <a href="https://github.com/olszewskioc">
+    <img src="https://github.com/olszewskioc.png" alt="Thiago Olszewski" style="border-radius: 50%; width: 60px; height: 60px; margin: 10%">
+  </a>
+  <a href="https://github.com/Willdanthe">
+    <img src="https://github.com/Willdanthe.png" alt="Willdanthê Amorim" style="border-radius: 50%; width: 60px; height: 60px; margin: 10%">
+  </a>
+</div>
 
 ---
 
@@ -155,6 +181,11 @@ Utilizado para organizar sprints e tarefas.
 ### 💻 GitHub
 Repositório principal:  
 [https://github.com/Kaua676/govix](https://github.com/Kaua676/govix)
+
+
+## 📖 Manual de Uso
+
+Para instruções detalhadas de instalação, navegação e exemplos de requisições da API consulte o arquivo [MANUAL.md](MANUAL.md).
 
 ---
 

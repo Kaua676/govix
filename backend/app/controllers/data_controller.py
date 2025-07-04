@@ -5,6 +5,7 @@ import plotly.io as pio
 import plotly.graph_objects as go
 import plotly.express as px
 from services.filter import filtrar_dataframe
+from services.dateUpdate import arquivo_recente
 
 pd.options.display.float_format = '{:,.2f}'.format
 
@@ -143,7 +144,7 @@ def filtro_mensal():
 
     ascending = json.loads(params.get("ascending").lower()) if params.get("ascending") else False
 
-    group = ["Mês/Ano", "UF", "Função"]
+    group = ["Data", "Mês/Ano", "UF", "Função"]
     if group_by := params.get("group"):
         for g in group_by:
             group.append(g)
@@ -157,7 +158,6 @@ def filtro_mensal():
     else:
         df_filtrado = df.copy()
 
-    # Exemplo de agrupamento final
     resultado = (
         df_filtrado
         .groupby(group)["Valor Transferido"]
@@ -282,6 +282,119 @@ def filtrar_dados():
     resultado = filtrar_dataframe(df, params)
     return resultado.to_json(orient="records", force_ascii=False)
 
+@data_bp.route("/filtro-ranking", methods=["POST"])
+def filtrar_dados_ranking():
+    """
+    Filtrar dados por UF, Função, Tipo e outros parâmetros
+    ---
+    tags:
+      - Filtros
+    consumes:
+      - application/json
+    produces:
+      - application/json
+    parameters:
+      - in: body
+        name: filtros
+        required: true
+        schema:
+          type: object
+          properties:
+            data_inicio:
+              type: string
+              format: date
+              example: "2020-01"
+              description: Data de início no formato YYYY-MM
+            data_fim:
+              type: string
+              format: date
+              example: "2023-12"
+              description: Data de fim no formato YYYY-MM
+            uf:
+              type: array
+              items:
+                type: string
+              example: ["SP", "RJ"]
+            funcao:
+              type: array
+              items:
+                type: string
+              example: ["Saúde", "Educação"]
+            tipo:
+              type: array
+              items:
+                type: string
+              example: ["Constitucionais e Royalties"]
+            favorecido:
+              type: array
+              items:
+                type: string
+              example: ["Entidades Sem Fins Lucrativos"]
+            programa:
+              type: array
+              items:
+                type: string
+              example: ["Atencao basica em saude"]
+            order_by:
+              type: string
+              example: "Ano"
+            ascending:
+              type: string
+              example: "false"
+            group:
+              type: array
+              items:
+                type: string
+              example: ["Tipo de Favorecido", "Programa Orçamentário"]
+    responses:
+      200:
+        description: Lista de dados agregados com base nos filtros aplicados
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              Ano:
+                type: integer
+                example: 2022
+              UF:
+                type: string
+                example: "SP"
+              Função:
+                type: string
+                example: "Saúde"
+              Tipo:
+                type: string
+                example: "Constitucionais e Royalties"
+              Tipo de Favorecido:
+                type: string
+                example: "Entidades Sem Fins Lucrativos"
+              Programa Orçamentário:
+                type: string
+                example: "Atencao basica em saude"
+              Total Investido:
+                type: number
+                format: float
+                example: 1250000.75
+      500:
+        description: Erro ao carregar dados
+        schema:
+          type: object
+          properties:
+            erro:
+              type: string
+              example: "Dados não carregados"
+    """
+
+    df = current_app.config.get("df")
+    if df is None or df.empty:
+        return jsonify({"erro": "Dados não carregados"}), 500
+
+    params = request.json
+
+    resultado = filtrar_dataframe(df, params, ranking=True)
+    return resultado.to_json(orient="records", force_ascii=False)
+
 @data_bp.route("/mapa", methods=["POST"])
 def mapa_funcao_ano():
   """
@@ -333,12 +446,13 @@ def mapa_funcao_ano():
   data_inicio = pd.to_datetime(params["data_inicio"], format="%Y-%m")
   data_fim = pd.to_datetime(params["data_fim"], format="%Y-%m")
   funcoes = params.get("funcao")
+  tipo = params.get("tipo")
   
   map_params = {
     "data_inicio": data_inicio,
     "data_fim": data_fim,
     "uf": [],
-    "tipo": [],
+    "tipo": tipo,
     "funcao": funcoes,
     "favorecido": [],
     "programa": [],
@@ -362,6 +476,8 @@ def mapa_funcao_ano():
           
   # Adicionar coluna com total geral
   resultado_pivot["Total Investido"] = resultado_pivot[funcoes].sum(axis=1)
+  
+  resultado_pivot = resultado_pivot.sort_values(by=["Ano", "UF"]).reset_index(drop=True)
 
   # Garantir que todas as funções existam como colunas (mesmo que vazias)
   for func in funcoes:
@@ -417,6 +533,8 @@ def mapa_funcao_ano():
   
   fig.update_traces(hovertemplate="%{text}<extra></extra>")
   
+  fig.frames = sorted(fig.frames, key=lambda x: int(x.name))
+  
   for frame in fig.frames:
     # Acha o ano atual do frame
     ano_frame = int(frame.name)
@@ -438,8 +556,58 @@ def mapa_funcao_ano():
       margin={"r":0, "t":40, "l":0, "b":0}
   )
   
-  # fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2000
-
-  # fig.show()
-
   return pio.to_json(fig)
+
+@data_bp.route("/ultima-atualizacao", methods=["GET"])
+def ultima_atualizacao():
+    """
+    Retorna o nome do arquivo mais recente e sua data de modificação
+    ---
+    tags:
+      - Metadados
+    summary: Última atualização dos dados transferidos
+    responses:
+      200:
+        description: Nome do arquivo, data da última modificação e a hora da última modificação
+        schema:
+          type: object
+          properties:
+            nome_arquivo:
+              type: string
+              example: "transferencias_2024.csv"
+            data_modificacao:
+              type: string
+              example: "2025-07-01"
+            hora_modificao:
+              type: string
+              example: "18:30:00"
+      404:
+        description: Nenhum arquivo encontrado
+        schema:
+          type: object
+          properties:
+            erro:
+              type: string
+              example: "Nenhum arquivo encontrado"
+      500:
+        description: Erro interno
+        schema:
+          type: object
+          properties:
+            erro:
+              type: string
+              example: "Erro interno inesperado"
+    """
+    try:
+        nome, data_modificacao, hora_modificacao = arquivo_recente()
+        if nome is None:
+            return jsonify({"erro": "Nenhum arquivo encontrado"}), 404
+
+        return jsonify({
+            "nome_arquivo": nome,
+            "data_modificacao": data_modificacao,
+            "hora_modificacao": hora_modificacao
+        }), 200
+
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
